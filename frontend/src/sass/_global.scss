@@ -1,0 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Source+Serif+Pro:wght@200;300;400;600;700;900&family=Tenor+Sans&display=swap");
+
+// Fonts
+$poppins: "Poppins", sans-serif;
+$source: "Source Serif Pro", serif;
+$tenor: "Tenor Sans", sans-serif;
+
+// colors
+$bg-color: #f2fcff;
+$primary-color: #094b72;
+$secondary-color: #1282a6;
+$tertiary-color: #05546d;
+
+// Mixins
+@mixin d-flex($d: row, $jc: center, $ai: center) {
+  display: flex;
+  flex-direction: $d;
+  justify-content: $jc;
+  align-items: $ai;
+}
+
+$breakpoints: (
+  "phone": 500px,
+  "tablet": 720px,
+  "before-tablet": 950px,
+  "large-tablet": 1220px,
+);
+
+@mixin phone {
+  @media (max-width: map-get($breakpoints, "phone")) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: map-get($breakpoints, "tablet")) {
+    @content;
+  }
+}
+
+@mixin before-tablet {
+  @media (max-width: map-get($breakpoints, "before-tablet")) {
+    @content;
+  }
+}
+
+@mixin large-tablet {
+  @media (max-width: map-get($breakpoints, "large-tablet")) {
+    @content;
+  }
+}
