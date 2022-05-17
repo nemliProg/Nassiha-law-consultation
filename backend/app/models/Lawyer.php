@@ -24,6 +24,20 @@ class Lawyer
       return false;
     }
   }
+  public function ifLawyer($id)
+  {
+    $this->db->query('SELECT * FROM lawyers WHERE id = :id');
+    // Bind value
+    $this->db->bind(':id', $id);
+
+    $row = $this->db->single();
+
+    if ($row) {
+      return true;
+    }else {
+      return false;
+    }
+  }
 
   public function specialisedToggle($idLawyer, $idSkill)
   {

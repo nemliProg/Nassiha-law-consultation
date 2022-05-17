@@ -23,7 +23,6 @@ class MessageConroller extends Controller
       'to_err' => '',
       'idConsultation_err' => '',
     ];
-
     if (empty($data['content'])) {
       $data['content_err'] = 'X';
     }
@@ -36,7 +35,6 @@ class MessageConroller extends Controller
     if (empty($data['idConsultation'])) {
       $data['idConsultation_err'] = 'X';
     }
-
     if (empty($data['content_err']) && empty($data['from_err']) && empty($data['to_err']) && empty($data['idConsultation_err'])) {
       if ($this->messageModel->addMessage($data)) {
         $arr = array(
@@ -57,5 +55,5 @@ class MessageConroller extends Controller
     }
   }
 
-  
+
 }

@@ -21,6 +21,8 @@ class Client
     $this->db->bind(':tel', $data['tel']);
     $this->db->bind(':email', $data['email']);
     $this->db->bind(':cin', $data['cin']);
+
+    $data['password'] = password_hash($data['password'],PASSWORD_DEFAULT);
     $this->db->bind(':password', $data['password']);
     // Execute
     if ($this->db->execute()) {
@@ -36,7 +38,9 @@ class Client
     $this->db->bind(':email', $email);
 
     $row = $this->db->single();
-
+    if (!$row) {
+      return false;
+    }
     $hashed_password = $row->password;
     if (password_verify($password, $hashed_password)) {
       return $row;
@@ -44,6 +48,8 @@ class Client
       return false;
     }
   }
+
+  
 
   // Get User by ID
   public function getClientById($id)
