@@ -10,66 +10,66 @@ class ClientsController extends Controller
     $this->lawyerModel = $this->model('Lawyer');
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');
-  }
-  public function index()
-  {
-    echo "Hello from clients Controller";
+    
   }
 
   public function login()
   {
-    $data = [
-      'email' => $_POST['email'],
-      'email_err' => '',
-      'password' => $_POST['password'],
-      'password_err' => ''
-    ];
+    header('Acces-Control-Allow-Methods: POST');
+    header('Acces-Control-Allow-Headers: Acces-Control-Allow-Methods,Content-Type,Acces-Control-Allow-Headers,Authorization,X-Requested-With');
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      $data = [
+        'email' => $_POST['email'],
+        'email_err' => '',
+        'password' => $_POST['password'],
+        'password_err' => ''
+      ];
+      if (empty($data['email'])) {
+        $data['email_err'] = 'X';
+      }
+      if (empty($data['password'])) {
+        $data['password_err'] = 'X';
+      }
 
-    if (empty($data['email'])) {
-      $data['email_err'] = 'X';
-    }
-    if (empty($data['password'])) {
-      $data['password_err'] = 'X';
-    }
+      if (empty($data['email_err']) && empty($data['password_err'])) {
+        $row = $this->clientModel->login($data['email'], $data['password']);
+        if ($row) {
+          $ifLawyer = $this->lawyerModel->ifLawyer($row->id);
+          $iss = "localhost";
+          $iat = time();
+          $nbf = $iat + 10;
+          $exp = $iat + 30;
+          $aud = ($ifLawyer) ? "myclients" : "myLawyers";
+          $client_data = array(
+            "id" => $row->id,
+            "fname" => $row->fname,
+            "lname" => $row->lname,
+            "email" => $row->email,
+            "lawyer" => $ifLawyer
+          );
+          $payload_info = array(
+            "iss" => $iss,
+            "iat" => $iat,
+            "nbf" => $nbf,
+            "exp" => $exp,
+            "aud" => $aud,
+            "data" => $client_data
+          );
 
-    if (empty($data['email_err']) && empty($data['password_err'])) {
-      $row = $this->clientModel->login($data['email'], $data['password']);
-      if ($row) {
-        $ifLawyer = $this->lawyerModel->ifLawyer($row->id);
-        $iss = "localhost";
-        $iat = time();
-        $nbf = $iat + 10;
-        $exp = $iat + 30;
-        $aud = ($ifLawyer) ?"myclients":"myLawyers";
-        $client_data = array(
-          "id" => $row->id,
-          "fname" => $row->fname,
-          "lname" => $row->lname,
-          "email" => $row->email,
-          "lawyer" => $ifLawyer
-        );
-        $payload_info = array(
-          "iss" => $iss,
-          "iat" => $iat,
-          "nbf" => $nbf,
-          "exp" => $exp,
-          "aud" => $aud,
-          "data" => $client_data
-        );
-
-        $secret_key = "za3bola123";
-        $algorithm = "HS256";
-        $jwt = JWT::encode($payload_info,$secret_key,$algorithm);
-        $arr = array(
-          'message' => 'You are logged in',
-          'jwt' => $jwt
-        );
-        echo json_encode($arr);
-      } else {
-        $arr = array(
-          'message' => 'information is incorecct'
-        );
-        echo json_encode($arr);
+          $secret_key = "za3bola123";
+          $algorithm = "HS256";
+          $jwt = JWT::encode($payload_info, $secret_key, $algorithm);
+          $arr = array(
+            'message' => 'You are logged in',
+            'jwt' => $jwt
+          );
+          echo json_encode($arr);
+        } else {
+          $arr = array(
+            'message' => 'information is incorecct'
+          );
+          echo json_encode($arr);
+        }
       }
     }
   }

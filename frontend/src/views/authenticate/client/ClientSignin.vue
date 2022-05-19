@@ -3,32 +3,36 @@
   <div class="container">
     <div class="side form-section">
       <h3>Sign In</h3>
-      <form>
+      <form @submit.prevent="signin">
         <label for="photo">
           Profile Photo
-          <input type="file" name="photo" id="photo" />
+          <input @change="selectFile" type="file" name="photo" id="photo" />
         </label>
         <div class="names">
           <label for="firstName">
           First Name
-          <input type="text" name="firstName" id="firstName" />
+          <input type="text" name="firstName" id="firstName" v-model="fname"/>
         </label>
         <label for="lastName">
           Last Name
-          <input type="text" name="lastName" id="lastName" />
+          <input type="text" name="lastName" id="lastName" v-model="lname"/>
         </label>
         </div>
         <label for="phone">
           Phone
-          <input type="tel" name="phone" id="phone" />
+          <input type="tel" name="phone" id="phone" v-model="tel"/>
+        </label>
+        <label for="cin">
+          CIN
+          <input type="text" name="cin" id="cin" v-model="cin"/>
         </label>
         <label for="email">
           Email
-          <input type="email" name="email" id="email" />
+          <input type="email" name="email" id="email" v-model="email"/>
         </label>
         <label for="password">
           Password
-          <input type="password" name="password" id="password" />
+          <input type="password" name="password" id="password" v-model="password"/>
         </label>
         <div>
           <input type="submit" value="Submit" />
@@ -46,9 +50,62 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: "ClientSignin",
   components: {},
+  data(){
+    return {
+      fname : '',
+      lname : '',
+      photo : null,
+      tel : '',
+      cin : '',
+      email : '',
+      password : ''
+
+    }
+  },
+  methods : {
+    selectFile(event) {
+      this.photo = event.target.files[0];
+      console.log(this.photo);
+    },
+    async signin(){
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const data = {
+        fname : this.fname,
+        lname : this.lname,
+        tel : this.tel,
+        cin: this.cin,
+        email: this.email,
+        password: this.password,
+        photo : this.photo
+      };
+      const formData = new FormData();
+      Object.keys(data).forEach((key) => {
+        formData.append(key, data[key]);
+      });
+      console.log(data);
+      axios
+        .post(
+          "http://localhost/nassiha-law-consultation/clientscontroller/register",
+          formData,
+          config
+        )
+        .then((response) => {
+          let data = response.data;
+          console.log(data);
+          this.$router.push({name: 'ClientLogin'});
+          // this.$store.dispatch("setIsLoggedIn", true);
+        })
+        .catch((err) => console.log(err));
+    }
+  },
 };
 </script>
 

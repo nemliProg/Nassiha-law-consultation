@@ -9,6 +9,16 @@ class LawyersController extends Controller
     header('Content-Type: application/json');
   }
 
+  public function getLawyers()
+  {
+    $result = $this->lawyerModel->getLawyers();
+    
+
+    if ($result) {
+      echo json_encode($result);
+    }
+  }
+
   public function register()
   {
     header('Acces-Control-Allow-Methods: POST');
@@ -108,12 +118,4 @@ class LawyersController extends Controller
     }
   }
 
-  public function index()
-  {
-    echo 'helllo';
-  }
-  public function about()
-  {
-    echo 'about';
-  }
 }

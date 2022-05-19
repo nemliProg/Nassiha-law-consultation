@@ -9,18 +9,28 @@
     </div>
     <div class="side form-section">
       <h3>Login</h3>
-      <form>
+      <form @submit.prevent="login">
         <label for="email">
           Email
-          <input type="email" name="email" id="email" />
+          <input type="email" name="email" id="email" v-model="email" />
         </label>
         <label for="password">
           Password
-          <input type="password" name="password" id="password" />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            v-model="password"
+          />
         </label>
         <div>
           <input type="submit" value="Submit" />
-          <span>create an account <router-link to="/authenticate/client/signin">here</router-link></span>
+          <span
+            >create an account
+            <router-link to="/authenticate/client/signin"
+              >here</router-link
+            ></span
+          >
         </div>
       </form>
     </div>
@@ -28,9 +38,50 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "ClientLogin",
   components: {},
+  data() {
+    return {
+      email: "",
+      password: "",
+    };
+  },
+  methods: {
+    async login() {
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const data = {
+        email: this.email,
+        password: this.password,
+      };
+      const formData = new FormData();
+      Object.keys(data).forEach((key) => {
+        formData.append(key, data[key]);
+      });
+      console.log(data);
+      axios
+        .post(
+          "http://localhost/nassiha-law-consultation/clientscontroller/login",
+          formData,
+          config
+        )
+        .then((response) => {
+          let data = response.data;
+          // window.localStorage.setItem('token',data.token)
+          // window.localStorage.setItem('id',data.user.id)
+          console.log(data);
+          // this.$router.push({path: '/'});
+          // this.$store.dispatch("setIsLoggedIn", true);
+        })
+        .catch((err) => console.log(err));
+    },
+  },
 };
 </script>
 

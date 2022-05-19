@@ -12,7 +12,7 @@ export default createStore({
       "NICT law, IT, advertising and intellectual property",
       "Insurance, bodily injury and health law",
       "Public law, urban planning and environmental law",
-      "International law, foreigners' law and immigration",
+      "International law, foreigners law and immigration",
       "Criminal law, traffic law",
       "Tax law, taxes, duties",
       "Administrative law",
