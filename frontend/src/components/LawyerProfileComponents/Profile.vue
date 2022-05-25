@@ -1,17 +1,11 @@
 <template>
   <div class="container">
     <div class="profile">
-      <h2>Maître Nadia Tarafi</h2>
-      <p>Lawyer at the bar of Rabat</p>
+      <h2>Maître {{lawyer.lname}} {{lawyer.fname}}</h2>
+      <p>Lawyer at the bar of {{lawyer.bar}}</p>
       <h3>Skills</h3>
       <div class="skills">
-        <p>Skills 1</p>
-        <p>Skills 2</p>
-        <p>Skills 3</p>
-        <p>Skills 4</p>
-        <p>Skills 5</p>
-        <p>Skills 6</p>
-        <p>Skills 7</p>
+        <p v-for="(skill,i) in lawyer.skills" :key="i" >{{skill}}</p>
       </div>
     </div>
   </div>
@@ -20,7 +14,7 @@
 <script>
 export default {
   name: "Profile",
-  
+  props: ["lawyer"]
 };
 </script>
 

@@ -24,4 +24,31 @@ class Message extends Database {
       return false;
     }
   }
+
+  public function updateMessage($data)
+  {
+    $this->db->query('UPDATE messages SET  content = :content WHERE id = :id');
+    // Bind values
+    $this->db->bind(':content', $data['content']);
+    $this->db->bind(':id', $data['id']);
+
+  
+    if ($this->db->execute()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  public function deleteMessage($id)
+  {
+    $this->db->query('DELETE FROM messages WHERE id = :id');
+    // Bind values
+    $this->db->bind(':id', $id);
+    if ($this->db->execute()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

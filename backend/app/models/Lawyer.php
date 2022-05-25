@@ -35,15 +35,48 @@ class Lawyer
     $lawyersIds = [];
     foreach($lawyers as $lawyer){
       $lawyersMapByIds[$lawyer->id] = [...(array)($lawyer), "skills" => []];
+      $lawyersMapByIds[$lawyer->id] = [...(array)($lawyer), "languages" => []];
       $lawyersIds[] = $lawyer->id;
     }
     $skills = $this->getSkillsByLawyersIds($lawyersIds);
+    $languages = $this->getLanguagesByLawyersIds($lawyersIds);
     foreach($skills as $skill){
       $lawyerId = $skill->idLawyer;
       unset($skill->idLawyer);
-      $lawyersMapByIds[$lawyerId]["skills"][] = $skill;
+      $lawyersMapByIds[$lawyerId]["skills"][] = $skill->skill;
+    }
+    foreach($languages as $language){
+      $lawyerId = $language->idLawyer;
+      unset($language->idLawyer);
+      $lawyersMapByIds[$lawyerId]["languages"][] = $language->name;
     }
     $result =array_values($lawyersMapByIds); 
+    return $result;
+  }
+  public function getLawyerById($id)
+  {
+    $this->db->query('SELECT * 
+                      from clients c,lawyers l
+                      where c.id = l.id
+                      and l.id = :id');
+    $this->db->bind(':id', $id);
+    $lawyer = $this->db->single();
+    $lawyersMapByIds = [];
+    $lawyersIds = [];
+    $lawyersMapByIds = [...(array)($lawyer), "skills" => []];
+    $lawyersMapByIds = [...(array)($lawyer), "languages" => []];
+    $lawyersIds[] = $lawyer->id;
+    $skills = $this->getSkillsByLawyersIds($lawyersIds);
+    $languages = $this->getLanguagesByLawyersIds($lawyersIds);
+    foreach($skills as $skill){
+      unset($skill->idLawyer);
+      $lawyersMapByIds["skills"][] = $skill->skill;
+    }
+    foreach($languages as $language){
+      unset($language->idLawyer);
+      $lawyersMapByIds["languages"][] = $language->name;
+    }
+    $result =$lawyersMapByIds; 
     return $result;
   }
 
@@ -61,7 +94,7 @@ class Lawyer
   public function getSkillsByLawyersIds($ids)
   {
     $placeholders = implode(",", array_fill(0, count($ids), "?"));
-    $query = "select skills.*, specialised.idLawyer
+    $query = "select skills.skill, specialised.idLawyer
      from specialised
       left join skills on specialised.idSkill = skills.id where specialised.idLawyer in ($placeholders)
       ";
@@ -69,6 +102,19 @@ class Lawyer
       $this->db->getStmt()->execute($ids);
       $skills = $this->db->resultSet();
       return $skills;
+  }
+
+  public function getLanguagesByLawyersIds($ids)
+  {
+    $placeholders = implode(",", array_fill(0, count($ids), "?"));
+    $query = "select languages.name,languages.idLawyer
+     from languages
+      left join lawyers on languages.idLawyer = lawyers.id where languages.idLawyer in ($placeholders)
+      ";
+      $this->db->query($query);
+      $this->db->getStmt()->execute($ids);
+      $languages = $this->db->resultSet();
+      return $languages;
   }
 
 

@@ -7,12 +7,16 @@
         <input type="submit" value="Submit">
       </form>
     </div>
+    <div class="comments">
+      Affichage des commentaires
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name : 'Comment',
+  props:["comments"]
 }
 </script>
 

@@ -24,13 +24,37 @@
       </div>
     </div>
     <div class="lower-footer">
-    <p>&copy; 2021 AFRdvs. All rights reserved</p>
-    <div class="social-icons">
-      <span><a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"><img src="../assets/icons/social/Social_Icons.png" alt="" /></a></span>
-      <span><a href="http://dribbble.com" target="_blank" rel="noopener noreferrer"><img src="../assets/icons/social/Social_Icons-1.png" alt="" /></a></span>
-      <span><a href="https://twitter.com/" target="_blank" rel="noopener noreferrer"><img src="../assets/icons/social/Social_Icons-2.png" alt="" /></a></span>
-      <span><a href="http://youtube.com" target="_blank" rel="noopener noreferrer"><img src="../assets/icons/social/Social_Icons-3.png" alt="" /></a></span>
-    </div>
+      <p>&copy; 2021 AFRdvs. All rights reserved</p>
+      <div class="social-icons">
+        <span
+          ><a
+            href="https://www.instagram.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><img src="../assets/icons/social/Social_Icons.png" alt="" /></a
+        ></span>
+        <span
+          ><a
+            href="http://dribbble.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><img src="../assets/icons/social/Social_Icons-1.png" alt="" /></a
+        ></span>
+        <span
+          ><a
+            href="https://twitter.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><img src="../assets/icons/social/Social_Icons-2.png" alt="" /></a
+        ></span>
+        <span
+          ><a
+            href="http://youtube.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><img src="../assets/icons/social/Social_Icons-3.png" alt="" /></a
+        ></span>
+      </div>
     </div>
   </footer>
 </template>
@@ -42,35 +66,64 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-footer{
+footer {
   font-family: $poppins;
   font-weight: 200;
   color: white;
-  .upper-footer{
+  .upper-footer {
     padding: 20px 0px;
     display: flex;
     justify-content: space-around;
     background-color: $secondary-color;
-    div{
-      img{
+    div {
+      img {
         width: 200px;
       }
     }
-    .footer-nav{
+    .footer-nav {
       display: flex;
       gap: 20px;
-      div{
-        h4{
+      div {
+        h4 {
           padding-bottom: 15px;
           font-weight: 500;
         }
-        ul{
+        ul {
           list-style: none;
-          li{
-            a{
+          li {
+            a {
               color: inherit;
               text-decoration: none;
               font-size: 0.8rem;
+            }
+          }
+        }
+      }
+    }
+    @include phone {
+      @include d-flex(column);
+      div {
+        img {
+          width: 150px;
+        }
+      }
+      gap: 20px;
+      .footer-nav {
+        gap: 10px;
+        div {
+          width: 100px;
+          h4 {
+            padding-bottom: 15px;
+            font-weight: 500;
+            text-align: center;
+            font-size: 0.8rem;
+          }
+          ul {
+            li {
+              text-align: center;
+              a {
+                font-size: 0.7rem;
+              }
             }
           }
         }
@@ -83,12 +136,16 @@ footer{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    p{
-      font-size: .9rem;
+    p {
+      font-size: 0.9rem;
       font-weight: 200;
     }
     .social-icons {
       display: flex;
+      gap: 10px;
+    }
+    @include phone {
+      @include d-flex(column);
       gap: 10px;
     }
   }

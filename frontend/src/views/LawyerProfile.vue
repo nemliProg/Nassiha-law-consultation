@@ -1,4 +1,5 @@
 <template>
+<p style="background-color: blue;">{{ lawyer }}x</p>
   <div class="container header">
     <div class="profile-header">
       <div class="img-holder">
@@ -8,20 +9,20 @@
         />
       </div>
       <div class="profile-info">
-        <h3>Maître Nadia Tarafi</h3>
-        <p>Lawyer at the bar of Rabat</p>
+        <h3>Maître {{ lawyer?.lname}} {{ lawyer.fname }}</h3>
+        <p>Lawyer at the bar of {{ lawyer.bar }}</p>
         <p>
           <span class="icon"
-            ><img src="../assets/icons/adressIcon.svg" alt="localisation icon"
+            ><img src="../assets/icons/adressIconWhite.svg" alt="localisation icon"
           /></span>
-          N°61, Quartier Akouass, Appartement 2, Rabat, Maroc
+          {{ lawyer.adress}}
         </p>
         <p>
           <span class="icon"
             ><img
               src="../assets/icons/emailAdress.svg"
               alt="localisation icon" /></span
-          >nadia.tarafi@gmail.com
+          >{{ lawyer.email }}
         </p>
       </div>
     </div>
@@ -46,20 +47,23 @@
       </ul>
     </div>
   </div>
-  <Profile v-if="section === 0" />
-  <Experience v-else-if="section === 1" />
-  <Comment v-else-if="section === 2" />
+  <Profile v-if="section === 0" :lawyer="lawyer" />
+  <Experience v-else-if="section === 1" :lawyer="lawyer" />
+  <Comment v-else-if="section === 2" :lawyer="lawyer" />
 </template>
 <script>
+import axios from "axios";
 import Experience from "../components/LawyerProfileComponents/Experience.vue";
 import Profile from "../components/LawyerProfileComponents/Profile.vue";
 import Comment from "../components/LawyerProfileComponents/Comment.vue";
+
 
 export default {
   name: "LawyerProfile",
   data() {
     return {
       section: 0,
+      lawyerAxios : undefined
     };
   },
   components: {
@@ -67,14 +71,23 @@ export default {
     Profile,
     Comment,
   },
+  methods : {
+    
+  },
   mounted() {
     const li = document.querySelectorAll(".nav ul li");
-    li.forEach((item,i) => {
+    li.forEach((item, i) => {
       item.addEventListener("click", () => {
         this.section = i;
       });
     });
   },
+  computed: {
+    lawyer () {
+      const id = this.$route.params.id
+      return this.$store.state.lawyers.find(lawyer => lawyer.id == id)
+    }
+  }
 };
 </script>
 

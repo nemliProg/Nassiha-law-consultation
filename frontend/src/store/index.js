@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-
+import axios from 'axios';
 export default createStore({
   state: {
     skills: [
@@ -128,12 +128,38 @@ export default createStore({
       "Aïn Taoujdat",
       "Chichaoua",
     ],
+    lawyers : [],
   },
   getters: {
+    // getLawyerById: (state) => (id) => {
+    //   return state.lawyers.find(lawyer => lawyer.id == id)
+    // }, 
+    // getAllLawyers: (state) => {
+    //   return state.lawyers
+    // }
   },
   mutations: {
+    SET_LAWYERS(state,lawyers){
+      state.lawyers.length = 0
+      state.lawyers.push(...lawyers)
+    }
   },
   actions: {
+    async getLawyers({ commit }){
+      let config = {
+        headers: {},
+      };
+      axios
+        .get(
+          "http://localhost/nassiha-law-consultation/lawyerscontroller/getlawyers",
+          config
+        )
+        .then((response) => {
+          console.log(response.data);
+          commit('SET_LAWYERS',response.data)
+        })
+        .catch((err) => console.log(err));
+    }
   },
   modules: {
   }

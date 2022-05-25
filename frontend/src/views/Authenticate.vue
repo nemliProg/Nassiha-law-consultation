@@ -3,11 +3,15 @@
   <div class="container">
     <div class="side lawyer">
       <img src="../assets/illustrations/lawyer.svg" alt="lawyer" />
-      <button><router-link to="/authenticate/lawyer/login">Lawyer</router-link></button>
+      <button>
+        <router-link to="/authenticate/lawyer/login">Lawyer</router-link>
+      </button>
     </div>
     <div class="side client">
       <img src="../assets/illustrations/client.svg" alt="client" />
-      <button><router-link to="/authenticate/client/login">Client</router-link></button>
+      <button>
+        <router-link to="/authenticate/client/login">Client</router-link>
+      </button>
     </div>
   </div>
 </template>
@@ -23,7 +27,13 @@ export default {
 h1 {
   font-family: $tenor;
   margin: 50px auto;
-  width: max-content ;
+  width: max-content;
+  @include before-tablet {
+    font-size: 1.6rem;
+  }
+  @include phone {
+    font-size: 1.3rem;
+  }
 }
 .container {
   margin: 50px auto 60px;
@@ -53,10 +63,30 @@ h1 {
   }
   .lawyer {
     background-color: $secondary-color;
-    
   }
   .client {
     background-color: $tertiary-color;
+  }
+  @include before-tablet {
+    @include d-flex(column);
+    .side {
+      height: 300px;
+      width: min(400px, 80%);
+      img {
+        width: 50%;
+      }
+      @include phone-360 {
+        height: 200px;
+        button {
+          a{
+            font-size: 14px;
+          }
+        }
+        img{
+          display: none;
+        }
+      }
+    }
   }
 }
 </style>

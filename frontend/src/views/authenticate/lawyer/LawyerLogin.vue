@@ -81,7 +81,7 @@ h1 {
         @include d-flex(column, center, flex-start);
         gap: 5px;
         color: white;
-        width: 55%;
+        width: 60%;
         font-size: 1.2rem;
         font-family: inherit;
         input {
@@ -122,6 +122,14 @@ h1 {
           }
         }
       }
+    }
+  }
+  @include tablet {
+    .poster {
+      display: none;
+    }
+    .side {
+      width: min(350px,90%);
     }
   }
 }

@@ -20,11 +20,18 @@ $tertiary-color: #05546d;
 }
 
 $breakpoints: (
+  "phone-360": 500px,
   "phone": 500px,
   "tablet": 720px,
   "before-tablet": 950px,
   "large-tablet": 1220px,
 );
+
+@mixin phone-360 {
+  @media (max-width: map-get($breakpoints, "phone-360")) {
+    @content;
+  }
+}
 
 @mixin phone {
   @media (max-width: map-get($breakpoints, "phone")) {

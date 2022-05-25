@@ -343,5 +343,13 @@ h1 {
       }
     }
   }
+  @include tablet {
+    .poster {
+      display: none;
+    }
+    .side {
+      width: min(350px,90%);
+    }
+  }
 }
 </style>

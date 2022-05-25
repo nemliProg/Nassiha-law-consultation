@@ -12,8 +12,13 @@ class LawyersController extends Controller
   public function getLawyers()
   {
     $result = $this->lawyerModel->getLawyers();
-    
-
+    if ($result) {
+      echo json_encode($result);
+    }
+  }
+  public function getLawyer($id)
+  {
+    $result = $this->lawyerModel->getLawyerById($id);
     if ($result) {
       echo json_encode($result);
     }

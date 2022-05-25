@@ -12,6 +12,9 @@ export default {
   components : {
     Nav,
     Footer
+  },
+  mounted(){
+    this.$store.dispatch('getLawyers');
   }
 }
 </script>

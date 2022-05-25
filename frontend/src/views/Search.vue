@@ -23,143 +23,35 @@
       <img src="../assets/icons/SearchIcon.svg" alt="search icon" />
     </button>
   </div>
-
   <div class="lawyers">
-    <div class="lawyer">
-      <div>
-        <div class="lawyer-photo">
-          <img src="../assets/images/search_page/75e5a67cd7345216889591036672f7.jpg" alt="profile photo">
-        </div>
-        <div class="langs">
-          <img src="../assets/icons/languages/maroc.png" alt="arabic">
-          <img src="../assets/icons/languages/la-france.png" alt="frensh">
-          <img src="../assets/icons/languages/royaume-uni.png" alt="english">
-        </div>
-      </div>
-      <div>
-        <h3>Maître Nadia Tarafi</h3>
-        <h4>Avocat au barreau de Rabat</h4>
-        <p class="lawyer-adress"><span class="adress-icon"><img src="../assets/icons/adressIcon.svg" alt=""></span> N°61, Quartier Akouass, Appartement 2, Rabat, Maroc</p>
-        <div class="skills">
-          <p>Generalist lawyer</p>
-          <p>Family, personal and consumer law</p>
-        </div>
-        <div class="see-more">
-          <span class="plus-icon"><img src="../assets/icons/Plus.svg" alt=""></span>
-          see more skills
-        </div>
-      </div>
-      <div>
-        <img src="../assets/icons/akbarIcon.svg" alt="arrow">
-      </div>
-    </div>
-        <div class="lawyer">
-      <div>
-        <div class="lawyer-photo">
-          <img src="../assets/images/search_page/jpg_jem-jp-delcade-w-9925-c306e.jpg" alt="profile photo">
-        </div>
-        <div class="langs">
-          <img src="../assets/icons/languages/maroc.png" alt="arabic">
-          <img src="../assets/icons/languages/la-france.png" alt="frensh">
-          <img src="../assets/icons/languages/royaume-uni.png" alt="english">
-        </div>
-      </div>
-      <div>
-        <h3>Maître Nadia Tarafi</h3>
-        <h4>Avocat au barreau de Rabat</h4>
-        <p class="lawyer-adress"><span class="adress-icon"><img src="../assets/icons/adressIcon.svg" alt=""></span> N°61, Quartier Akouass, Appartement 2, Rabat, Maroc</p>
-        <div class="skills">
-          <p>Generalist lawyer</p>
-          <p>Family, personal and consumer law</p>
-        </div>
-        <div class="see-more">
-          <span class="plus-icon"><img src="../assets/icons/Plus.svg" alt=""></span>
-          see more skills
-        </div>
-      </div>
-      <div>
-        <img src="../assets/icons/akbarIcon.svg" alt="arrow">
-      </div>
-      
-    </div>
-        <div class="lawyer">
-      <div>
-        <div class="lawyer-photo">
-          <img src="../assets/images/search_page/0e97ea4b2354a0fa7382128fd033d8.jpg" alt="profile photo">
-        </div>
-        <div class="langs">
-          <img src="../assets/icons/languages/maroc.png" alt="arabic">
-          <img src="../assets/icons/languages/la-france.png" alt="frensh">
-          <img src="../assets/icons/languages/royaume-uni.png" alt="english">
-        </div>
-      </div>
-      <div>
-        <h3>Maître Nadia Tarafi</h3>
-        <h4>Avocat au barreau de Rabat</h4>
-        <p class="lawyer-adress"><span class="adress-icon"><img src="../assets/icons/adressIcon.svg" alt=""></span> N°61, Quartier Akouass, Appartement 2, Rabat, Maroc</p>
-        <div class="skills">
-          <p>Generalist lawyer</p>
-          <p>Family, personal and consumer law</p>
-        </div>
-        <div class="see-more">
-          <span class="plus-icon"><img src="../assets/icons/Plus.svg" alt=""></span>
-          see more skills
-        </div>
-      </div>
-      <div>
-        <img src="../assets/icons/akbarIcon.svg" alt="arrow">
-      </div>
-      
-    </div>
-        <div class="lawyer">
-      <div>
-        <div class="lawyer-photo">
-          <img src="../assets/images/search_page/jpg_jem-jp-w-1651-69173.jpg" alt="profile photo">
-        </div>
-        <div class="langs">
-          <img src="../assets/icons/languages/maroc.png" alt="arabic">
-          <img src="../assets/icons/languages/la-france.png" alt="frensh">
-          <img src="../assets/icons/languages/royaume-uni.png" alt="english">
-        </div>
-      </div>
-      <div>
-        <h3>Maître Nadia Tarafi</h3>
-        <h4>Avocat au barreau de Rabat</h4>
-        <p class="lawyer-adress"><span class="adress-icon"><img src="../assets/icons/adressIcon.svg" alt=""></span> N°61, Quartier Akouass, Appartement 2, Rabat, Maroc</p>
-        <div class="skills">
-          <p>Generalist lawyer</p>
-          <p>Family, personal and consumer law</p>
-        </div>
-        <div class="see-more">
-          <span class="plus-icon"><img src="../assets/icons/Plus.svg" alt=""></span>
-          see more skills
-        </div>
-      </div>
-      <div>
-        <img src="../assets/icons/akbarIcon.svg" alt="arrow">
-      </div>
-      
-    </div>
-  
+    <Lawyer v-for="(lawyer,i) in lawyers" :key="i" :lawyer="lawyer" @click="navigate(lawyer.id)" />
   </div>
-  
 </template>
 
 <script>
+import axios from 'axios'
+import Lawyer from '../components/searchComponents/item.vue'
 export default {
   name: "Search",
-  components: {},
+  components: {
+    Lawyer
+  },
   data() {
     return {
       lawyerName: "",
       city: "",
-      skill: "",
-    };
+      skill: ""
+    }
   },
   methods: {
-  
+    navigate(id) {
+      this.$router.push({path : `/profile/${id}`})
+    }
   },
   computed: {
+    lawyers() {
+      return this.$store.state.lawyers;
+    },
     cities() {
       return this.$store.state.cities;
     },
@@ -167,10 +59,13 @@ export default {
       return this.$store.state.skills;
     },
   },
+  mounted() {
+    
+  }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .search-section {
   width: max-content;
   margin: 20px auto;
@@ -209,6 +104,7 @@ export default {
   @include d-flex(column);
   gap: 15px;
   .lawyer {
+    cursor: pointer;
     @include d-flex(row,space-between);
     background-color: $tertiary-color;
     width: 100%;

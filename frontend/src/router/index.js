@@ -52,6 +52,13 @@ const routes = [
     component: () =>
       import(/**/ "../views/LawyerProfile.vue"),
   },
+  ,
+  {
+    path: "/profile/:id",
+    name: "Profile",
+    component: () =>
+      import(/**/ "../views/LawyerProfile.vue"),
+  },
 ];
 
 const router = createRouter({

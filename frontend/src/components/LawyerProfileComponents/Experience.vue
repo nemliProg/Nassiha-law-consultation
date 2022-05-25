@@ -43,7 +43,7 @@
 <script>
 export default {
   name: "Profile",
-  
+  props:["lawyer"]
 };
 </script>
 

@@ -55,5 +55,71 @@ class MessageConroller extends Controller
     }
   }
 
+  public function updateMessage()
+  {
+    $data = [
+      'content' => $_POST['content'],
+      'content_err' => '',
+      'id' => $_POST['id'],
+      'id_err' => ''
+    ];
+    if (empty($data['content'])) {
+      $data['content_err'] = 'X';
+    }
+    if (empty($data['id'])) {
+      $data['id_err'] = 'X';
+    }
+
+    if (empty($data['content_err']) && empty($data['id_err'])) {
+      if ($this->messageModel->updateMessage($data)) {
+        $arr = array(
+          'message' => 'message updated'
+        );
+        echo json_encode($arr);
+      } else {
+        $arr = array(
+          'message' => 'something went wrong'
+        );
+        echo json_encode($arr);
+      }
+    } else {
+      $arr = array(
+        'message' => 'incomplete information'
+      );
+      echo json_encode($arr);
+    }
+  }
+
+  public function deleteMessage()
+  {
+    $data = [
+      'id' => $_POST['id'],
+      'id_err' => $_POST['id']
+    ];
+
+    if (empty($data['id'])) {
+      $data['id_err'] = 'X';
+    }
+
+    if (empty($data['id_err'])) {
+      if ($this->messageModel->deleteMessage($data['id'])) {
+        $arr = array(
+          'message' => 'message deleted'
+        );
+        echo json_encode($arr);
+      } else {
+        $arr = array(
+          'message' => 'something went wrong'
+        );
+        echo json_encode($arr);
+      }
+    } else {
+      $arr = array(
+        'message' => 'incomplete information'
+      );
+      echo json_encode($arr);
+    }
+  }
+
 
 }
