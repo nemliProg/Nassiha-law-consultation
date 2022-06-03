@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-
+import store from '../store/index'
 const routes = [
   {
     path: "/",
@@ -45,13 +45,7 @@ const routes = [
     name: "ClientSignin",
     component: () =>
       import(/**/ "../views/authenticate/client/ClientSignin.vue"),
-  },
-  {
-    path: "/profile",
-    name: "LawyerProfile",
-    component: () =>
-      import(/**/ "../views/LawyerProfile.vue"),
-  },
+  }
   ,
   {
     path: "/profile/:id",
@@ -59,11 +53,50 @@ const routes = [
     component: () =>
       import(/**/ "../views/LawyerProfile.vue"),
   },
+  {
+    path: "/myprofile",
+    name: "MyProfile",
+    component: () =>
+      import(/**/ "../views/MonProfile.vue"),
+  },
+  {
+    path: "/chat",
+    name: "Chat",
+    component: () =>
+      import(/**/ "../views/Chat.vue"),
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const lawyerRoutes = ['Chat','MyProfile'];
+  const clientRoutes = ['Chat','Profile','search'];
+  const globalRoutes = ['home','LawyerLogin','ClientLogin','ClientSignin','LawyerSignin','Authenticate','about'];
+  const state = store.state;
+  if (globalRoutes.includes(to.name)) {
+    next();
+  }else if (clientRoutes.includes(to.name)) {
+    console.log('client');
+    if (state.isLoggedIn && state.role === 'client') {
+      next();
+    }else {
+      next({name : "home"});
+    }
+  }else if (lawyerRoutes.includes(to.name)) {
+    console.log('lawyer');
+    if (state.isLoggedIn && state.role === 'lawyer') {
+      next();
+    }else {
+      next({name : "home"});
+    }
+  }else {
+    console.log('heelooooooo');
+    return false;
+  }
 });
 
 export default router;

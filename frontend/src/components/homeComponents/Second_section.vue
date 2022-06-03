@@ -1,9 +1,9 @@
 <template>
   <div class="second-section">
     <div>
-      <h2>why do we help<br />with legalization?</h2>
+      <h2>why do we help<br />with your legal problems?</h2>
       <p>
-        We are here for UMKM in Morocco to carry out the legalization process,
+        We are here to guide you in your legal cases,
         which is sometimes complicated.
       </p>
     </div>

@@ -90,7 +90,7 @@ export default {
       Object.keys(data).forEach((key) => {
         formData.append(key, data[key]);
       });
-      console.log(data);
+      console.log(formData);
       axios
         .post(
           "http://localhost/nassiha-law-consultation/clientscontroller/register",
@@ -149,7 +149,7 @@ h1 {
     background-color: $tertiary-color;
     form {
       @include d-flex(column);
-      gap: 2rem;
+      gap: 0.5rem;
       width: 100%;
       font-family: $tenor;
       .names {

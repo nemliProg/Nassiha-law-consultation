@@ -3,7 +3,7 @@
   <div class="container">
     <div class="side form-section">
       <h3>Sign In</h3>
-      <form data-multi-step>
+      <form data-multi-step @submit.prevent="signin">
         <div data-step class="card active">
           <div class="names">
             <label for="firstName">
@@ -15,6 +15,10 @@
               <input type="text" v-model="lname" id="lastName" required />
             </label>
           </div>
+          <label for="cin">
+            Cin
+            <input type="tel" v-model="cin" id="cin" required />
+          </label>
           <label for="phone">
             Phone
             <input type="tel" v-model="tel" id="phone" required />
@@ -81,6 +85,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: "LawyerSignin",
   components: {},
@@ -90,6 +96,7 @@ export default {
       lname : '',
       tel : '',
       email : '',
+      cin : '',
       password : '',
       photo : null,
       bar : '',
@@ -103,6 +110,43 @@ export default {
       this.photo = event.target.files[0];
       console.log(this.photo);
     },
+    async signin(){
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const data = {
+        fname : this.fname,
+        lname : this.lname,
+        tel : this.tel,
+        cin: this.cin,
+        email: this.email,
+        password: this.password,
+        photo : this.photo,
+        bar : this.bar,
+        cassation : this.cassation,
+        adress : this.adress
+      };
+      const formData = new FormData();
+      Object.keys(data).forEach((key) => {
+        formData.append(key, data[key]);
+      });
+      console.log(data);
+      axios
+        .post(
+          "http://localhost/nassiha-law-consultation/lawyercontroller/register",
+          formData,
+          config
+        )
+        .then((response) => {
+          let data = response.data;
+          console.log(data);
+          this.$router.push({name: 'LawyerLogin'});
+          // this.$store.dispatch("setIsLoggedIn", true);
+        })
+        .catch((err) => console.log(err));
+    }
   },
   mounted() {
     const multiStepForm = document.querySelector("[data-multi-step]");
@@ -166,7 +210,7 @@ h1 {
   .side {
     @include d-flex(column);
     width: min(500px, 40%);
-    height: 550px;
+    height: 700px;
     gap: 50px;
     h3 {
       color: white;
@@ -222,6 +266,7 @@ h1 {
             outline: none;
             border: none;
             border-radius: 10px;
+            // font-size: 0.9rem;
             font-size: 1.1rem;
           }
           select {

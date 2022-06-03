@@ -10,18 +10,26 @@
     </div>
     <ul id="links">
       <li><router-link to="/">HOME</router-link></li>
-      <li><router-link to="/search">Research Lawyer</router-link></li>
-      <!-- <li><router-link to="/about">ABOUT</router-link></li> -->
-      <li><router-link to="/profile">profile</router-link></li>
-      <li><router-link to="/authenticate">Login / Register</router-link></li>
+      <li v-if="isLoggedIn && (role === 'client')"><router-link  to="/search">Research Lawyer</router-link></li>
+      <li v-if="!isLoggedIn"><router-link to="/authenticate">Login / Register</router-link></li>
+      <li v-if="isLoggedIn"><router-link to="/chat">Conversations</router-link></li>
+      <li v-if="isLoggedIn && (role === 'lawyer')"><router-link  to="/">Dashboard</router-link></li>
+      <li v-if="isLoggedIn"><router-link @click="logout" to="/">Logout</router-link></li>
     </ul>
   </nav>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: "Nav",
   methods : {
+    logout() {
+      localStorage.clear();
+      this.$store.dispatch("setIsLoggedIn", false);
+      this.$store.dispatch("setRole", "guest");
+    },
     toggleNav(){
       const nav = document.getElementById('links')
       const navLinks = document.querySelectorAll('nav ul li')
@@ -34,7 +42,13 @@ export default {
         }
       });
     }
-  }
+  },
+  computed: {
+    ...mapState({
+      isLoggedIn: state => state.isLoggedIn,
+      role: state => state.role
+    }),
+  },
 };
 </script>
 

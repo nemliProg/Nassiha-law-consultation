@@ -51,35 +51,36 @@ export default {
   },
   methods: {
     async login() {
-      let config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-      const data = {
-        email: this.email,
-        password: this.password,
-      };
-      const formData = new FormData();
-      Object.keys(data).forEach((key) => {
-        formData.append(key, data[key]);
-      });
-      console.log(data);
+      var data = new FormData();
+      data.append("email", this.email);
+      data.append("password", this.password);
       axios
         .post(
           "http://localhost/nassiha-law-consultation/clientscontroller/login",
-          formData,
-          config
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         )
         .then((response) => {
-          let data = response.data;
-          // window.localStorage.setItem('token',data.token)
-          // window.localStorage.setItem('id',data.user.id)
-          console.log(data);
-          // this.$router.push({path: '/'});
-          // this.$store.dispatch("setIsLoggedIn", true);
+          console.log(response.data);
+          const {role, jwt, id} = response.data ?? {};
+          if (!role) {
+            console.log("Wrong email or password");
+            return;
+          }
+          localStorage.setItem("token", jwt);
+          localStorage.setItem("role", role);
+          localStorage.setItem("id", id);
+          this.$store.dispatch("setIsLoggedIn", true);
+          this.$store.dispatch("setRole", role);
+          this.$router.push(role === "laywer" ? "/myprofile" : "/");
         })
-        .catch((err) => console.log(err));
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };
@@ -157,6 +158,7 @@ h1 {
           background-color: $secondary-color;
           color: white;
           font-size: 1.2rem;
+          cursor: pointer;
         }
         span:last-child {
           color: white;
@@ -180,7 +182,7 @@ h1 {
       display: none;
     }
     .side {
-      width: min(350px,90%);
+      width: min(350px, 90%);
     }
   }
 }

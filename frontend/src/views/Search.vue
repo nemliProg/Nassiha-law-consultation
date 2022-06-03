@@ -49,7 +49,7 @@ export default {
     }
   },
   computed: {
-    lawyers() {
+    lawyers() {    
       return this.$store.state.lawyers;
     },
     cities() {
@@ -60,7 +60,7 @@ export default {
     },
   },
   mounted() {
-    
+    this.$store.dispatch("getLawyers");
   }
 };
 </script>

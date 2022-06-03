@@ -8,7 +8,6 @@ class Client
     $this->db = new Database;
   }
 
-
   
   // Regsiter user
   public function register($data)

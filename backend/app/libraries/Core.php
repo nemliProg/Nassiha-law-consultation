@@ -4,13 +4,33 @@
    * Creates URL & loads core controller
    * URL FORMAT - /controller/method/params
    */
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
   class Core {
     protected $currentController = 'LawyersController';
     protected $currentMethod = 'index';
     protected $params = [];
 
     public function __construct(){
+
+      $headers = apache_request_headers();
       
+      if (isset($headers['Authorization'])) {
+        $token = $headers['Authorization'];
+        $token = str_replace('Bearer ', '', $token);
+        try {
+          $decoded = JWT::decode($token, new Key(JWT_SECRET_KEY, 'HS256'));
+        } catch (Exception $e) {
+          $ex = array(
+            'message' => false
+          );
+          echo json_encode($ex);
+          die();
+        }
+      }
+
       $url = $this->getUrl();
       // Look in controllers for first value
       if (isset($url[0])) {
@@ -36,6 +56,7 @@
           unset($url[1]);
         }
       }
+      
 
       // Get params
       $this->params = $url ? array_values($url) : [];

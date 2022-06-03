@@ -2,7 +2,7 @@
 <div class="last-section">
   <h3>For the first time,consult a lawyer in realtime chat<br />
   And get the answer as soon as possible.</h3>
-  <router-link to="/about"><button>Consult a Lawyer now</button></router-link>
+  <router-link to="/about"><router-link to="/search"><button>Consult a Lawyer now</button></router-link></router-link>
 </div>
   
 </template>
@@ -10,7 +10,6 @@
 <script>
 export default {
   name : "Last",
-  
 }
 </script>
 

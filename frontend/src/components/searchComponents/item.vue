@@ -13,9 +13,9 @@
       <div>
         <h3>Maître {{ lawyer.fname}} {{ lawyer.lname }}</h3>
         <h4>Avocat au barreau de {{ lawyer.bar }}</h4>
-        <p class="lawyer-adress"><span class="adress-icon"><img src="../../assets/icons/adressIcon.svg" alt=""></span> {{ lawyer.adress }}</p>
+        <p class="lawyer-adress"><span class="adress-icon"><img src="../../assets/icons/adressIconWhite.svg" alt=""></span> {{ lawyer.adress }}</p>
         <div class="skills">
-          <p v-for="(skill,i) in lawyer.skills.slice(0,2)">{{ skill }}</p>
+          <p v-for="(skill,i) in lawyer.skills?.slice(0,2)">{{ skill }}</p>
         </div>
         <div class="see-more">
           <span class="plus-icon"><img src="../../assets/icons/Plus.svg" alt=""></span>

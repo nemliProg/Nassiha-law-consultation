@@ -3,10 +3,9 @@
     <div class="left-side">
       <h1>Your Solution<br />Legal Consultacy</h1>
       <p>
-        We are here to help you take care of your legality with the best service
-        especially for you.
+        We are here to help you in your legal cases and increase your knowledge with legal advice from experts.
       </p>
-      <router-link to="/about"><button>Consult a lawyer</button></router-link>
+      <router-link to="/about"><router-link to="/search"><button>Consult a lawyer</button></router-link></router-link>
     </div>
     <div class="right-side">
       <img src="../../assets/images/wepik-2022227-181652-removebg.png" alt="" />

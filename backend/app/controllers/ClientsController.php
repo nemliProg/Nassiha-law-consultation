@@ -10,7 +10,14 @@ class ClientsController extends Controller
     $this->lawyerModel = $this->model('Lawyer');
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');
-    
+  }
+
+  public function getClient($id)
+  {
+    $result = $this->clientModel->getClientById($id);
+    if ($result) {
+      echo json_encode($result);
+    }
   }
 
   public function login()
@@ -20,15 +27,24 @@ class ClientsController extends Controller
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $data = [
         'email' => $_POST['email'],
-        'email_err' => '',
         'password' => $_POST['password'],
-        'password_err' => ''
+        'err' => ''
       ];
       if (empty($data['email'])) {
-        $data['email_err'] = 'X';
+        $data['err'] = 'email is required';
+        $arr = array(
+          'message' => $data['err']
+        );
+        echo json_encode($arr);
+        die();
       }
       if (empty($data['password'])) {
-        $data['password_err'] = 'X';
+        $data['err'] = 'password is required';
+        $arr = array(
+          'message' => $data['err']
+        );
+        echo json_encode($arr);
+        die();
       }
 
       if (empty($data['email_err']) && empty($data['password_err'])) {
@@ -38,8 +54,8 @@ class ClientsController extends Controller
           $iss = "localhost";
           $iat = time();
           $nbf = $iat + 10;
-          $exp = $iat + 30;
-          $aud = ($ifLawyer) ? "myclients" : "myLawyers";
+          $exp = $iat + 432000;
+          $aud = ($ifLawyer) ? "MyLawyers" : "Myclients";
           $client_data = array(
             "id" => $row->id,
             "fname" => $row->fname,
@@ -56,12 +72,13 @@ class ClientsController extends Controller
             "data" => $client_data
           );
 
-          $secret_key = "za3bola123";
           $algorithm = "HS256";
-          $jwt = JWT::encode($payload_info, $secret_key, $algorithm);
+          $jwt = JWT::encode($payload_info, JWT_SECRET_KEY, $algorithm);
           $arr = array(
             'message' => 'You are logged in',
-            'jwt' => $jwt
+            'jwt' => $jwt,
+            'role' => $ifLawyer ? "lawyer" : "client",
+            'id' => $row->id
           );
           echo json_encode($arr);
         } else {
@@ -86,42 +103,76 @@ class ClientsController extends Controller
       'cin' => $_POST["cin"],
       'email' => $_POST["email"],
       'password' => $_POST["password"],
-      'fname_err' => '',
-      'lname_err' => '',
-      'photo_err' => '',
-      'tel_err' => '',
-      'cin_err' => '',
-      'email_err' => '',
-      'password_err' => ''
+      'err' => '',
     ];
     if (empty($data['fname'])) {
-      $data['fname_err'] = 'x';
+      $data['err'] = 'First name is required';
+      $arr = array(
+        'message' => $data['err']
+      );
+      echo json_encode($arr);
+      die();
     }
     if (empty($data['lname'])) {
-      $data['lname_err'] = 'x';
+      $data['err'] = 'last name is required';
+      $arr = array(
+        'message' => $data['err']
+      );
+      echo json_encode($arr);
+      die();
     }
     if (empty($data['tel'])) {
-      $data['tel_err'] = 'x';
+      $data['err'] = 'telephone is required';
+      $arr = array(
+        'message' => $data['err']
+      );
+      echo json_encode($arr);
+      die();
     }
 
     if (empty($data['photo'])) {
-      $data['photo_err'] = 'Please select  your photo';
+      $data['err'] = 'Please select  your photo';
+      $arr = array(
+        'message' => $data['err']
+      );
+      echo json_encode($arr);
+      die();
     }
 
     if (empty($data['cin'])) {
-      $data['cin_err'] = 'x';
+      $data['err'] = 'cin is required';
+      $arr = array(
+        'message' => $data['err']
+      );
+      echo json_encode($arr);
+      die();
     }
     if (empty($data['email'])) {
-      $data['email_err'] = 'x';
+      $data['err'] = 'email is required';
+      $arr = array(
+        'message' => $data['err']
+      );
+      echo json_encode($arr);
+      die();
     }
     if (empty($data['password'])) {
-      $data['password_err'] = 'x';
+      $data['err'] = 'password is required';
+      $arr = array(
+        'message' => $data['err']
+      );
+      echo json_encode($arr);
+      die();
     }
     $imag_name = $data['photo']['name'];
     $imag_size = $data['photo']['size'];
     $tmp_name = $data['photo']['tmp_name'];
-    if ($imag_size > 1250000) {
-      $data['photo_err'] = "sorry , your file is too large ";
+    if ($imag_size > 99999999999999) {
+      $data['err'] = "sorry , your file is too large ";
+      $arr = array(
+        'message' => $data['err']
+      );
+      echo json_encode($arr);
+      die();
     } else {
       $img_ex = pathinfo($imag_name, PATHINFO_EXTENSION);
       $img_ex_lc = strtolower($img_ex);
@@ -132,11 +183,16 @@ class ClientsController extends Controller
         move_uploaded_file($tmp_name, $img_upload_path);
         $data['photo'] = URLROOT . "/img/$new_img_name";
       } else {
-        $data['photo_err'] = "you can't upload files of this type ";
+        $data['err'] = "you can't upload files of this type ";
+        $arr = array(
+          'message' => $data['err']
+        );
+        echo json_encode($arr);
+        die();
       }
     }
     // Make sure no errors
-    if (empty($data['photo_err']) && empty($data['fname_err']) && empty($data['lname_err']) && empty($data['tel_err']) && empty($data['cin_err']) && empty($data['email_err']) && empty($data['password_err'])) {
+    if (empty($data['err'])) {
       // Validated
       if ($this->clientModel->register($data)) {
         $arr = array(
@@ -151,7 +207,7 @@ class ClientsController extends Controller
       }
     } else {
       $arr = array(
-        'message' => 'No Data'
+        'message' => $data['err']
       );
       echo json_encode($arr);
     }

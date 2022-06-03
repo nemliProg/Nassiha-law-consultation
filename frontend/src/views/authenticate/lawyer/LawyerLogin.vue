@@ -9,18 +9,28 @@
     </div>
     <div class="side form-section">
       <h3>Login</h3>
-      <form>
+      <form @submit.prevent="login">
         <label for="email">
           Email
-          <input type="email" name="email" id="email" />
+          <input type="email" name="email" id="email" v-model="email" />
         </label>
         <label for="password">
           Password
-          <input type="password" name="password" id="password" />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            v-model="password"
+          />
         </label>
         <div>
           <input type="submit" value="Submit" />
-          <span>create an account <router-link to="/authenticate/lawyer/signin">here</router-link></span>
+          <span
+            >create an account
+            <router-link to="/authenticate/lawyer/signin"
+              >here</router-link
+            ></span
+          >
         </div>
       </form>
     </div>
@@ -28,9 +38,56 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "lawyerLogin",
   components: {},
+  data() {
+    return {
+      email: "",
+      password: "",
+    };
+  },
+  methods: {
+    async login() {
+      var data = new FormData();
+      data.append("email", this.email);
+      data.append("password", this.password);
+      axios
+        .post(
+          "http://localhost/nassiha-law-consultation/clientscontroller/login",
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+          const { role, jwt, id } = response.data ?? {};
+          if (!role) {
+            console.log("Wrong email or password");
+            return;
+          }
+          localStorage.setItem("token", jwt);
+          localStorage.setItem("role", role);
+          localStorage.setItem("id", id);
+          this.$store.dispatch("setIsLoggedIn", true);
+          this.$store.dispatch("setRole", role);
+          if (role === "lawyer") {
+            this.$router.push({ path: "/myprofile"});
+          } else {
+            this.$router.push({ path : "/"});
+          }
+          this.$router.push({ path: role === "laywer" ? "/myprofile" : "/" });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
 };
 </script>
 
@@ -103,6 +160,7 @@ h1 {
           outline: none;
           width: 40%;
           padding: 6px;
+          cursor: pointer;
           background-color: $secondary-color;
           color: white;
           font-size: 1.2rem;
@@ -129,7 +187,7 @@ h1 {
       display: none;
     }
     .side {
-      width: min(350px,90%);
+      width: min(350px, 90%);
     }
   }
 }

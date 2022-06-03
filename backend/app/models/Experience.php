@@ -8,6 +8,7 @@ class Experience extends Database {
     $this->db = new Database;
   }
 
+
   public function getExperiencesByLawyer($id)
   {
       $this->db->query('SELECT * 

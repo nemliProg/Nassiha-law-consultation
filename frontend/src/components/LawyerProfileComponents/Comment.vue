@@ -16,7 +16,7 @@
 <script>
 export default {
   name : 'Comment',
-  props:["comments"]
+  props:["comments","v"]
 }
 </script>
 

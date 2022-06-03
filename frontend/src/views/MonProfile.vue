@@ -1,30 +1,28 @@
 <template>
-  <p style="background-color: blue">{{ lawyer ?? lawyerAxios }}x</p>
+<p style="background-color: blue;">{{ lawyer }}x</p>
   <div class="container header">
     <div class="profile-header">
       <div class="img-holder">
         <img
-          :src="lawyer?.photo ?? lawyerAxios.photo"
+          :src="lawyer.photo"
           alt="profile photo"
         />
       </div>
       <div class="profile-info">
-        <h3>Maître {{ lawyer?.lname ?? lawyerAxios.lname }} {{ lawyer?.fname ?? lawyerAxios.fname }}</h3>
-        <p>Lawyer at the bar of {{ lawyer?.bar ?? lawyerAxios.bar }}</p>
+        <h3>Maître {{ lawyer.lname  }} {{ lawyer.fname }}</h3>
+        <p>Lawyer at the bar of {{ lawyer.bar }}</p>
         <p>
           <span class="icon"
-            ><img
-              src="../assets/icons/adressIcon.svg"
-              alt="localisation icon"
+            ><img src="../assets/icons/adressIconWhite.svg" alt="localisation icon"
           /></span>
-          {{ lawyer?.adress ?? lawyerAxios.adress }}
+          {{ lawyer.adress }}
         </p>
         <p>
           <span class="icon"
             ><img
               src="../assets/icons/emailAdress.svg"
               alt="localisation icon" /></span
-          >{{ lawyer?.email ?? lawyerAxios.email }}
+          >{{ lawyer.email }}
         </p>
       </div>
     </div>
@@ -49,22 +47,22 @@
       </ul>
     </div>
   </div>
-  <Profile v-if="section === 0" :lawyer="lawyer ?? lawyerAxios" v=0 />
-  <Experience v-else-if="section === 1" :lawyer="lawyer ?? lawyerAxios" v=0 />
-  <Comment v-else-if="section === 2" :lawyer="lawyer ?? lawyerAxios" v=0 />
+  <Profile v-if="section === 0" :lawyer="lawyer" v=1 />
+  <Experience v-else-if="section === 1" :lawyer="lawyer" v=1 />
+  <Comment v-else-if="section === 2" :lawyer="lawyer" v=1 />
 </template>
 <script>
 import Experience from "../components/LawyerProfileComponents/Experience.vue";
 import Profile from "../components/LawyerProfileComponents/Profile.vue";
 import Comment from "../components/LawyerProfileComponents/Comment.vue";
-import axios from "axios";
+import axios from 'axios';
 
 export default {
-  name: "LawyerProfile",
+  name: "MonProfile",
   data() {
     return {
       section: 0,
-      lawyerAxios: {},
+      lawyer : {}
     };
   },
   components: {
@@ -72,10 +70,9 @@ export default {
     Profile,
     Comment,
   },
-  methods: {
-    async getLawyer() {
-      console.log("im here");
-      let id = this.$route.params.id;
+  methods : {
+    async getLawyer(){
+      let id = localStorage.getItem('id'); 
       console.log(id);
       let config = {
         headers: {
@@ -89,7 +86,7 @@ export default {
         )
         .then((response) => {
           console.log(response.data);
-          this.lawyerAxios = response.data;
+          this.lawyer = response.data;
         })
         .catch((err) => console.log(err));
     },
@@ -101,15 +98,13 @@ export default {
         this.section = i;
       });
     });
-    if (this.lawyer === undefined) {
-      this.getLawyer();
-    }
+    
+    this.getLawyer();
+
+
   },
   computed: {
-    lawyer() {
-      return this.$store.state.lawyers.find(lawyer => lawyer.id == this.$route.params.id);
-    },
-  },
+  }
 };
 </script>
 
@@ -131,7 +126,6 @@ export default {
       }
     }
     .profile-info {
-
       p {
         font-size: 0.8rem;
         .icon {
