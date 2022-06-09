@@ -19,6 +19,10 @@ class LawyersController extends Controller
   
   public function getLawyer($id)
   {
+    if (!$id) {
+      echo json_encode(['error' => 'No id']);
+      return;
+    }
     $result = $this->lawyerModel->getLawyerById($id);
     if ($result) {
       echo json_encode($result);

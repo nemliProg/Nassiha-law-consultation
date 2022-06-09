@@ -17,19 +17,7 @@ use Firebase\JWT\Key;
 
       $headers = apache_request_headers();
       
-      if (isset($headers['Authorization'])) {
-        $token = $headers['Authorization'];
-        $token = str_replace('Bearer ', '', $token);
-        try {
-          $decoded = JWT::decode($token, new Key(JWT_SECRET_KEY, 'HS256'));
-        } catch (Exception $e) {
-          $ex = array(
-            'message' => false
-          );
-          echo json_encode($ex);
-          die();
-        }
-      }
+      
 
       $url = $this->getUrl();
       // Look in controllers for first value
@@ -61,6 +49,30 @@ use Firebase\JWT\Key;
       // Get params
       $this->params = $url ? array_values($url) : [];
 
+
+      if (!($this->currentMethod == "login" || $this->currentMethod == "register" )) {
+        if (isset($headers['Authorization'])) {
+          $token = $headers['Authorization'];
+          $token = str_replace('Bearer ', '', $token);
+          try {
+            $decoded = JWT::decode($token, new Key(JWT_SECRET_KEY, 'HS256'));
+          } catch (Exception $e) {
+            $ex = array(
+              'message' => false,
+              "error" => $e->getMessage()
+            );
+            echo json_encode($ex);
+            die();
+          }
+        }else {
+          $ex = array(
+            'message' => false,
+            "error" => "No token provided"
+          );
+          echo json_encode($ex);
+          die();
+        }
+      }
       // Call a callback with array of params
       call_user_func_array([$this->currentController, $this->currentMethod], $this->params);
     }

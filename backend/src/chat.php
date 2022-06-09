@@ -1,19 +1,33 @@
 <?php
 namespace MyApp;
+
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
+require_once '../app/models/Client.php';
+
+
+
 class Chat implements MessageComponentInterface {
     protected $clients;
+    // private $users;
 
     public function __construct() {
         $this->clients = new \SplObjectStorage;
+        // $this->users = new Client();
         echo "server is runing...";
     }
 
     public function onOpen(ConnectionInterface $conn) {
+
         // Store the new connection to send messages to later
         $this->clients->attach($conn);
+
+        $querystring = $conn->httpRequest->getUri()->getQuery();
+        
+        parse_str($querystring, $queryarray);
+
+
 
         echo "New connection! ({$conn->resourceId})\n";
     }

@@ -52,9 +52,9 @@ class ClientsController extends Controller
         if ($row) {
           $ifLawyer = $this->lawyerModel->ifLawyer($row->id);
           $iss = "localhost";
-          $iat = time();
+          $iat = strtotime("now");
           $nbf = $iat + 10;
-          $exp = $iat + 432000;
+          $exp = strtotime("+1 week");
           $aud = ($ifLawyer) ? "MyLawyers" : "Myclients";
           $client_data = array(
             "id" => $row->id,

@@ -1,20 +1,22 @@
 <?php
 
-class LanguagesController extends Controller
+class DiplomasConroller extends Controller
 {
 
   public function __construct()
   {
-    $this->languageModel = $this->model('Language');
+    $this->diplomaModel = $this->model('Diploma');
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');
   }
 
-  public function getlanguagesByLawyerId($id)
+  
+
+  public function getdiplomasByLawyerId($id)
   {
     try {
-      $languages = $this->languageModel->getlanguagesByLawyerId($id);
-      echo json_encode($languages);
+      $diplomas = $this->diplomaModel->getdiplomasByLawyerId($id);
+      echo json_encode($diplomas);
     } catch (\Throwable $th) {
       $arr = array(
         'message' => 'something went wrong'
@@ -23,31 +25,29 @@ class LanguagesController extends Controller
     } 
   }
 
-  public function addLanguage()
+  public function addDiploma()
   {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        echo json_encode(array(
-        'message' => 'This method is not allowed'
-      ));
-        die();
-    }
-
     $data = [
-      'name' => $_POST['name'],
+      'diploma' => $_POST['diploma'],
+      'university' => $_POST['university'],
       'idLawyer' => $_POST['idLawyer'],
-      'name_err' => '',
+      'diploma_err' => '',
+      'university_err' => '',
       'idLawyer_err' => '',
     ];
-    if (empty($data['name'])) {
-      $data['name_err'] = 'X';
+    if (empty($data['diploma'])) {
+      $data['diploma_err'] = 'X';
+    }
+    if (empty($data['university'])) {
+      $data['university_err'] = 'X';
     }
     if (empty($data['idLawyer'])) {
       $data['idLawyer_err'] = 'X';
     }
-    if (empty($data['name_err']) && empty($data['idLawyer_err'])) {
-      if ($this->languageModel->addLanguage($data)) {
+    if (empty($data['diploma_err']) && empty($data['university_err']) && empty($data['idLawyer_err'])) {
+      if ($this->diplomaModel->addDiploma($data)) {
         $arr = array(
-          'message' => 'language added'
+          'message' => 'diploma added'
         );
         echo json_encode($arr);
       } else {
@@ -58,22 +58,15 @@ class LanguagesController extends Controller
       }
     } else {
       $arr = array(
-        'message' => 'incomplete information'
+        'message' => 'incomplete informations'
       );
       echo json_encode($arr);
     }
   }
 
 
-  public function deleteLanguage()
+  public function deleteDiploma()
   {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-      echo json_encode(array(
-        'message' => 'This method is not allowed'
-      ));
-      die();
-    }
-
     $data = [
       'id' => $_POST['id'],
       'id_err' => $_POST['id']
@@ -83,10 +76,10 @@ class LanguagesController extends Controller
       $data['id_err'] = 'X';
     }
 
-    if (!empty($data['id_err'])) {
-      if ($this->languageModel->deleteLanguage($data['id'])) {
+    if (empty($data['id_err'])) {
+      if ($this->diplomaModel->deletediploma($data['id'])) {
         $arr = array(
-          'message' => 'Language deleted'
+          'message' => 'message deleted'
         );
         echo json_encode($arr);
       } else {

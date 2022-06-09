@@ -10,12 +10,9 @@ class ExperiencesController extends Controller
     header('Content-Type: application/json');
   }
 
-  public function ExperiencesByLawyer()
+  public function ExperiencesByLawyer($id)
   {
-    $data = [
-      'id' => $_POST['idLawyer']
-    ];
-    $result = $this->experienceModel->getExperiencesByLawyer($data['id']);
+    $result = $this->experienceModel->getExperiencesByLawyer($id);
     if ($result) {
       echo json_encode($result);
     }

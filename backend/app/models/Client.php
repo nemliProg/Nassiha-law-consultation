@@ -48,6 +48,13 @@ class Client
     }
   }
 
+  public function setconnectionId($id,$connectionId){
+    $this->db->query('UPDATE clients SET connectionId = :connectionId WHERE id = :id');
+    $this->db->bind(':connectionId', $connectionId);
+    $this->db->bind(':id', $id);
+    $this->db->execute();
+  }
+
   
 
   // Get User by ID

@@ -1,6 +1,6 @@
 <?php
 
-class MessageConroller extends Controller
+class MessagesController extends Controller
 {
 
   public function __construct()
@@ -8,6 +8,16 @@ class MessageConroller extends Controller
     $this->messageModel = $this->model('Message');
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');
+  }
+
+  public function getMessagesByConsultation($id)
+  {
+    if (!$id) {
+      echo json_encode(['error' => 'No id']);
+      return;
+    }
+    $messages = $this->messageModel->getMessagesByConsultationId($id);
+    echo json_encode($messages);
   }
 
   public function addMessage()
@@ -120,6 +130,4 @@ class MessageConroller extends Controller
       echo json_encode($arr);
     }
   }
-
-
 }
