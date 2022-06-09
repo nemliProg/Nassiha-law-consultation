@@ -1,6 +1,7 @@
-import { createStore } from 'vuex'
-import axios from 'axios';
-import router from '@/router';
+import { createStore } from "vuex";
+import axios from "axios";
+import router from "@/router";
+
 export default createStore({
   state: {
     skills: [
@@ -129,37 +130,75 @@ export default createStore({
       "Aïn Taoujdat",
       "Chichaoua",
     ],
-    lawyers : [],
+    lawyers: [],
     isLoggedIn: false,
-    role : 'guest',
+    role: "guest",
+    lawyer: {},
+    lawyerComments: [],
   },
   getters: {
     // getLawyerById: (state) => (id) => {
     //   return state.lawyers.find(lawyer => lawyer.id == id)
-    // }, 
+    // },
     // getAllLawyers: (state) => {
-      //   return state.lawyers
-      // }
-    },
-    mutations: {
-    SET_LAWYERS(state,lawyers){
-      state.lawyers.length = 0
-      state.lawyers.push(...lawyers)
+    //   return state.lawyers
+    // }
+  },
+  mutations: {
+    SET_LAWYERS(state, lawyers) {
+      state.lawyers.length = 0;
+      state.lawyers.push(...lawyers);
     },
     SET_IS_LOGGED_IN(state, isLoggedIn) {
       state.isLoggedIn = isLoggedIn;
     },
     SET_ROLE(state, role) {
       state.role = role;
-    }
+    },
+    SET_LAWYER(state, lawyer) {
+      state.lawyer = lawyer;
+    },
+    DELETE_SKILL({ lawyer }, id) {
+      lawyer.skills = lawyer.skills.filter((e) => e.id != id);
+    },
+    ADD_SKILL({ lawyer }, skill) {
+      lawyer.skills.push(skill);
+    },
+    DELETE_LANG({ lawyer }, id) {
+      lawyer.languages = lawyer.languages.filter((e) => e.id != id);
+    },
+    ADD_LANG({ lawyer }, lang) {
+      lawyer.languages.push(lang);
+    },
+    DELETE_EXP({ lawyer }, id) {
+      lawyer.experiences = lawyer.experiences.filter((e) => e.id != id);
+    },
+    ADD_EXP({ lawyer }, lang) {
+      lawyer.experiences.push(lang);
+    },
+    DELETE_DIPLOMA({ lawyer }, id) {
+      lawyer.diplomas = lawyer.diplomas.filter((e) => e.id != id);
+    },
+    ADD_DIPLOMA({ lawyer }, dpl) {
+      lawyer.diplomas.push(dpl);
+    },
+    DELETE_COMMENT({ lawyerComments }, id) {
+      lawyerComments = lawyerComments.filter((e) => e.id != id);
+    },
+    ADD_COMMENT(state, cmt) {
+      state.lawyerComments.push(cmt);
+    },
+    SET_COMMENTS( state, comments) {
+      state.lawyerComments = comments;
+    },
   },
   actions: {
-    async getLawyers({ commit }){
+    async getLawyers({ commit }) {
       let config = {
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('token')
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
       };
       axios
@@ -170,20 +209,55 @@ export default createStore({
         .then((response) => {
           console.log(response.data);
           if (response.data.message === false) {
-            router.push({path : '/authenticate/client/login'});
-          }else{
-            commit('SET_LAWYERS',response.data)
+            router.push({ path: "/authenticate/client/login" });
+          } else {
+            commit("SET_LAWYERS", response.data);
           }
         })
         .catch((err) => console.log(err));
     },
-    setIsLoggedIn({ commit },isLoggedIn) {
-      commit("SET_IS_LOGGED_IN",isLoggedIn );
+    async getLawyer({ commit }) {
+      let id = localStorage.getItem("id");
+      console.log(id);
+      let config = {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      };
+      await axios
+        .get(
+          `http://localhost/nassiha-law-consultation/lawyerscontroller/getLawyer/${id}`,
+          config
+        )
+        .then((response) => {
+          console.log(response.data);
+          commit("SET_LAWYER", response.data);
+        })
+        .catch((err) => console.log(err));
     },
-    setRole({ commit },role) {
-      commit("SET_ROLE",role );
+    async getLawyerComments({commit},id) {
+      let config = {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      };
+      axios
+        .get(
+          `http://localhost/nassiha-law-consultation/commentscontroller/getAllCommentsByLawyerId/${id}`,
+          config
+        )
+        .then((response) => {
+          console.log(response.data);
+          commit("SET_COMMENTS", response.data);
+        })
+        .catch((err) => console.log(err));
+    },
+    setIsLoggedIn({ commit }, isLoggedIn) {
+      commit("SET_IS_LOGGED_IN", isLoggedIn);
+    },
+    setRole({ commit }, role) {
+      commit("SET_ROLE", role);
     },
   },
-  modules: {
-  }
-})
+  modules: {},
+});

@@ -15,9 +15,13 @@
         </span>
       </router-link>
     </div>
-    <Interlocutor :collapsed="collapsed"/>
-    <Interlocutor :collapsed="collapsed"/>
-    <Interlocutor :collapsed="collapsed"/>
+    <Interlocutor
+      v-for="(consultation, i) in consultations"
+      :key="i"
+      :consultation="consultation"
+      :collapsed="collapsed"
+      @click="setOther(consultation)"
+    />
     <span
       class="collapse-icon"
       @click="toggleSidebar"
@@ -30,7 +34,6 @@
 
 <script>
 import { collapsed, toggleSidebar, sidebarWidth } from "./state";
-import { onMounted, onUnmounted } from "vue";
 import Interlocutor from "./sidebarComponents/Interlocutor.vue";
 
 export default {
@@ -40,22 +43,35 @@ export default {
       type: Object,
       required: true,
     },
+    consultations : {
+      type: Array,
+      required: true,
+    },
+    setOther: {
+      type: Function,
+      required: true,
+    },
   },
   data() {
     return {
-    }
+      
+    };
   },
   components: {
     Interlocutor,
   },
   methods: {
+    
+  },
+  mounted() {
+    
   },
   setup() {
     return {
       collapsed,
       toggleSidebar,
       sidebarWidth,
-    }
+    };
   },
 };
 </script>
@@ -78,7 +94,7 @@ export default {
   a {
     color: white;
     text-decoration: none;
-    
+
     .monProfile-collapsed {
       margin-bottom: 5px;
       @include d-flex(row, center, center);

@@ -1,5 +1,4 @@
 <template>
-  <p style="background-color: blue">{{ lawyer ?? lawyerAxios }}x</p>
   <div class="container header">
     <div class="profile-header">
       <div class="img-holder">
@@ -51,12 +50,14 @@
   </div>
   <Profile v-if="section === 0" :lawyer="lawyer ?? lawyerAxios" v=0 />
   <Experience v-else-if="section === 1" :lawyer="lawyer ?? lawyerAxios" v=0 />
-  <Comment v-else-if="section === 2" :lawyer="lawyer ?? lawyerAxios" v=0 />
+  <Comment v-else-if="section === 2" :comments="comments" v=0 />
+  <Consultation v-else-if="section === 3" :lawyer="lawyer ?? lawyerAxios" v=0 />
 </template>
 <script>
 import Experience from "../components/LawyerProfileComponents/Experience.vue";
 import Profile from "../components/LawyerProfileComponents/Profile.vue";
 import Comment from "../components/LawyerProfileComponents/Comment.vue";
+import Consultation from "../components/LawyerProfileComponents/Consultation.vue";
 import axios from "axios";
 
 export default {
@@ -71,6 +72,7 @@ export default {
     Experience,
     Profile,
     Comment,
+    Consultation,
   },
   methods: {
     async getLawyer() {
@@ -104,11 +106,16 @@ export default {
     if (this.lawyer === undefined) {
       this.getLawyer();
     }
+    this.$store.dispatch("getLawyerComments",this.$route.params.id)
+
   },
   computed: {
     lawyer() {
       return this.$store.state.lawyers.find(lawyer => lawyer.id == this.$route.params.id);
     },
+    comments(){
+      return this.$store.state.lawyerComments
+    }
   },
 };
 </script>

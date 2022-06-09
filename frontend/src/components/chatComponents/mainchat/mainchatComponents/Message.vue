@@ -1,15 +1,20 @@
 <template>
-  <div :class="{ 'right message' : (direction === 'right'), 'left message' : (direction === 'left')}">
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam inventore cupiditate voluptas.
-    <span class="datetime">12-06-2022 14:49</span>
-    <div :class="{ 'triangle triangle-right': (direction === 'right'), 'triangle triangle-left' : (direction === 'left')}"></div>
+  <div :class="{ 'right message' : (message._from == id), 'left message' : (message._from != id)}">
+    {{message.content}}
+    <span class="datetime">{{ message.create_at }}</span>
+    <div :class="{ 'triangle triangle-right': (message._from == id), 'triangle triangle-left' : (message._from != id)}"></div>
   </div>
 </template>
 
 <script>
 export default {
   name: "Message",
-  props : ['direction', 'message'],
+  props : ['message'],
+  data() {
+    return {
+      id : window.localStorage.getItem('id'),  
+    };
+  },
 };
 </script>
 

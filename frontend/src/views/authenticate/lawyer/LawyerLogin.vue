@@ -81,7 +81,21 @@ export default {
           } else {
             this.$router.push({ path : "/"});
           }
-          this.$router.push({ path: role === "laywer" ? "/myprofile" : "/" });
+          this.$swal.fire({
+            toast: true,
+            icon: "success",
+            title: "You Are Logged In",
+            position: "top-right",
+            iconColor: "#094b72",
+            color: "#094b72",
+            customClass: {
+              popup: "colored-toast",
+            },
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+          });
+          this.$router.push({ path: role == "laywer" ? "/myprofile" : "/" });
         })
         .catch((error) => {
           console.log(error);

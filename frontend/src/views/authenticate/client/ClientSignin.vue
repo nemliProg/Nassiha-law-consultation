@@ -6,12 +6,12 @@
       <form @submit.prevent="signin">
         <label for="photo">
           Profile Photo
-          <input @change="selectFile" type="file" name="photo" id="photo" />
+          <input @change="selectFile" type="file" name="photo" id="photo"/>
         </label>
         <div class="names">
           <label for="firstName">
           First Name
-          <input type="text" name="firstName" id="firstName" v-model="fname"/>
+          <input type="text" name="firstName" id="firstName" v-model="fname" required/>
         </label>
         <label for="lastName">
           Last Name
@@ -20,19 +20,19 @@
         </div>
         <label for="phone">
           Phone
-          <input type="tel" name="phone" id="phone" v-model="tel"/>
+          <input type="tel" name="phone" id="phone" v-model="tel" required/>
         </label>
         <label for="cin">
           CIN
-          <input type="text" name="cin" id="cin" v-model="cin"/>
+          <input type="text" name="cin" id="cin" v-model="cin" required/>
         </label>
         <label for="email">
           Email
-          <input type="email" name="email" id="email" v-model="email"/>
+          <input type="email" name="email" id="email" v-model="email" required/>
         </label>
         <label for="password">
           Password
-          <input type="password" name="password" id="password" v-model="password"/>
+          <input type="password" name="password" id="password" v-model="password" required/>
         </label>
         <div>
           <input type="submit" value="Submit" />
@@ -100,6 +100,20 @@ export default {
         .then((response) => {
           let data = response.data;
           console.log(data);
+          this.$swal.fire({
+            toast: true,
+            icon: "success",
+            title: "You Are Sign In log in now",
+            position: "top-right",
+            iconColor: "#094b72",
+            color: "#094b72",
+            customClass: {
+              popup: "colored-toast",
+            },
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+          });
           this.$router.push({name: 'ClientLogin'});
           // this.$store.dispatch("setIsLoggedIn", true);
         })

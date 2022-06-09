@@ -65,6 +65,12 @@ const routes = [
     component: () =>
       import(/**/ "../views/Chat.vue"),
   },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "notFound",
+    component: () =>
+      import(/**/ "../views/NotFound.vue"),
+  },
 ];
 
 const router = createRouter({
@@ -73,29 +79,40 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const lawyerRoutes = ['Chat','MyProfile'];
-  const clientRoutes = ['Chat','Profile','search'];
+  const lawyerRoutes = ['MyProfile'];
+  const clientRoutes = ['Profile','search'];
   const globalRoutes = ['home','LawyerLogin','ClientLogin','ClientSignin','LawyerSignin','Authenticate','about'];
   const state = store.state;
   if (globalRoutes.includes(to.name)) {
     next();
+    return true;
   }else if (clientRoutes.includes(to.name)) {
-    console.log('client');
     if (state.isLoggedIn && state.role === 'client') {
       next();
+      return true;
     }else {
       next({name : "home"});
+      return true;
     }
   }else if (lawyerRoutes.includes(to.name)) {
-    console.log('lawyer');
     if (state.isLoggedIn && state.role === 'lawyer') {
       next();
+      return true;
     }else {
       next({name : "home"});
+      return true;
+    }
+  }else if(to.name === 'Chat') {
+    if (state.isLoggedIn && state.role) {
+      next();
+      return true;
+    }else {
+      next({name : "home"});
+      return true;
     }
   }else {
-    console.log('heelooooooo');
-    return false;
+    next();
+    return true;
   }
 });
 

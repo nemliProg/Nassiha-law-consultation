@@ -13,7 +13,7 @@
       <li v-if="isLoggedIn && (role === 'client')"><router-link  to="/search">Research Lawyer</router-link></li>
       <li v-if="!isLoggedIn"><router-link to="/authenticate">Login / Register</router-link></li>
       <li v-if="isLoggedIn"><router-link to="/chat">Conversations</router-link></li>
-      <li v-if="isLoggedIn && (role === 'lawyer')"><router-link  to="/">Dashboard</router-link></li>
+      <li v-if="isLoggedIn && (role === 'lawyer')"><router-link to="/myprofile">My Profile</router-link></li>
       <li v-if="isLoggedIn"><router-link @click="logout" to="/">Logout</router-link></li>
     </ul>
   </nav>
@@ -34,6 +34,7 @@ export default {
       const nav = document.getElementById('links')
       const navLinks = document.querySelectorAll('nav ul li')
       nav.classList.toggle('opened-nav')
+      
       navLinks.forEach((link,index) => {
         if (link.style.animation) {
           link.style.animation = ``;
@@ -62,9 +63,9 @@ nav {
   font-family: $poppins;
   background-color: white;
   position: relative;
-
+  z-index: 999;
   .mobile-work {
-      @include d-flex(row,space-between);
+    @include d-flex(row,space-between);
   }
   .logo-holder {
     min-width: 150px;

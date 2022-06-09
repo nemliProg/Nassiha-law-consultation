@@ -66,9 +66,15 @@ export default {
         )
         .then((response) => {
           console.log(response.data);
-          const {role, jwt, id} = response.data ?? {};
+          const { role, jwt, id } = response.data ?? {};
           if (!role) {
-            console.log("Wrong email or password");
+            this.$swal.fire({
+              position: "top-end",
+              icon: "error",
+              title: "Wrong email or password",
+              showConfirmButton: false,
+              timer: 1500,
+            });
             return;
           }
           localStorage.setItem("token", jwt);
@@ -76,7 +82,34 @@ export default {
           localStorage.setItem("id", id);
           this.$store.dispatch("setIsLoggedIn", true);
           this.$store.dispatch("setRole", role);
-          this.$router.push(role === "laywer" ? "/myprofile" : "/");
+
+          let conn = new WebSocket(`ws://localhost:8080?id=${id}/`);
+
+          conn.onopen = (event) => {
+            console.log("connected");
+          };
+          conn.onmessage = (event) => {
+            // console.log(event.data);
+          };
+          conn.onclose = (event) => {
+            console.log("disconnected");
+          };
+
+          this.$router.push(role == "laywer" ? "/myprofile" : "/");
+          this.$swal.fire({
+            toast: true,
+            icon: "success",
+            title: "You Are Logged In",
+            position: "top-right",
+            iconColor: "#094b72",
+            color: "#094b72",
+            customClass: {
+              popup: "colored-toast",
+            },
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+          });
         })
         .catch((error) => {
           console.log(error);

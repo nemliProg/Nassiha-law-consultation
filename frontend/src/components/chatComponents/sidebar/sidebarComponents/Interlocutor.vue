@@ -1,15 +1,15 @@
 <template>
-  <div class="interlocutor">
+  <div class="interlocutor" :title="consultation.fname + ' ' + consultation.lname">
     <span v-if="collapsed" class="interlocutor-collapsed">
       <div class="img-holder">
-        <img src="https://www.simonebertollini.com/wp-content/uploads/2017/10/simone_2.jpg" alt="profile photo" />
+        <img :src="consultation.photo" alt="profile photo" />
       </div>
     </span>
     <span v-else class="interlocutor-incollapsed">
       <div class="img-holder">
-        <img src="https://www.simonebertollini.com/wp-content/uploads/2017/10/simone_2.jpg" alt="profile photo" />
+        <img :src="consultation.photo" alt="profile photo" />
       </div>
-      <h3>Maître Rachid Tarafi</h3>
+      <h3>Maître {{ consultation.fname }} {{ consultation.lname }}</h3>
     </span>
   </div>
 </template>
@@ -17,7 +17,7 @@
 <script>
 export default {
   name: "Interlocutor",
-  props: ["interlocutor", "collapsed"],
+  props: ["consultation", "collapsed"],
   components: {},
   mounted() {},
   computed: {},
