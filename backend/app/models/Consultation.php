@@ -10,7 +10,7 @@ class Consultation
 
   public function getConsultationsbyclient($idClient)
   {
-    $this->db->query('SELECT con.id,cl.fname,cl.lname,cl.photo
+    $this->db->query('SELECT con.id,cl.id AS "to",cl.fname,cl.lname,cl.photo
                       FROM clients cl ,consultation con
                       WHERE cl.id IN (select c.idLawyer from consultation c where c.idClient = :idClient)
                       AND con.idClient = :idClient
@@ -22,7 +22,7 @@ class Consultation
 
   public function getConsultationsbylawyer($idLawyer)
   {
-    $this->db->query('SELECT con.id,cl.fname,cl.lname,cl.photo
+    $this->db->query('SELECT con.id,cl.id AS "to",cl.fname,cl.lname,cl.photo
                       FROM clients cl ,consultation con
                       WHERE cl.id IN (select c.idClient from consultation c where c.idLawyer = :idLawyer)
                       AND con.idLawyer = :idLawyer

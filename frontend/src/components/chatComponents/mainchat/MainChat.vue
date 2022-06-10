@@ -14,12 +14,12 @@
     <div class="messages">
       <Message v-for="(message,i) in messages" :message="message" :key="i" />
     </div>
-    <div class="send-message" :style="{ 'margin-left': sidebarWidth }">
-      <input type="text" placeholder="Type a message..." />
+    <form class="send-message" :style="{ 'margin-left': sidebarWidth }" @submit.prevent="sendMessage">
+      <input type="text" placeholder="Type a message..." v-model="message" />
       <button>
         <i class="fas fa-paper-plane"></i>
       </button>
-    </div>
+    </form>
   </div>
 </template>
 
@@ -36,11 +36,20 @@ export default {
   data() {
     return {
       messages: null,
+      message: "",
     };
   },
   props: {
     cons: {
       type: Object,
+      required: true,
+    },
+    conn: {
+      type: Object,
+      required: true,
+    },
+    trigger: {
+      type: Number,
       required: true,
     },
   },  
@@ -58,9 +67,37 @@ export default {
           config
         )
         .then((response) => {
-          console.log("dzdzdzdzdzdzdz")
-          console.log(response.data);
           this.messages = response.data;
+        })
+        .catch((err) => console.log(err));
+
+        const messagesDiv = document.getElementsByClassName("messages")[0];
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    },
+    async sendMessage() {
+
+
+      let config = {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      };
+      var data = new FormData();
+      data.append("content", this.message);
+      data.append("from", localStorage.getItem("id"));
+      data.append("to", this.cons.to);
+      data.append("idConsultation", this.cons.id);
+      await axios
+        .post(
+          `http://localhost/nassiha-law-consultation/messagesController/addmessage`,
+          data,
+          config
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.conn.send(response.data);
+          this.getMessages();
+          this.message = "";
         })
         .catch((err) => console.log(err));
     },
@@ -74,12 +111,16 @@ export default {
       sidebarWidth,
     };
   },
+  watch: {
+    trigger(newVal, oldVal) {
+        this.getMessages();
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .mainChat {
-  position: fixed;
   background-color: $bg-color;
   top: 69px;
   height: calc(100vh - 70px);
@@ -88,6 +129,7 @@ export default {
     height: calc(100% - 70px);
     padding: 20px 20px 80px 20px;
     overflow-y: scroll;
+    scroll-behavior: smooth;
   }
   .interlocutor {
     background-color: $secondary-color;

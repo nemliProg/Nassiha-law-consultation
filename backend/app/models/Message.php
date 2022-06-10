@@ -14,7 +14,7 @@ class Message extends Database {
                       FROM messages m,consultation c
                       WHERE m.idConsultation = c.id
                       AND c.id = :id
-                      ORDER BY m.create_at DESC');
+                      ORDER BY m.create_at ASC');
     $this->db->bind(':id', $id);
 
     $results = $this->db->resultSet();

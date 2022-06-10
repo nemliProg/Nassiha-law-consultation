@@ -83,19 +83,7 @@ export default {
           this.$store.dispatch("setIsLoggedIn", true);
           this.$store.dispatch("setRole", role);
 
-          let conn = new WebSocket(`ws://localhost:8080?id=${id}/`);
-
-          conn.onopen = (event) => {
-            console.log("connected");
-          };
-          conn.onmessage = (event) => {
-            // console.log(event.data);
-          };
-          conn.onclose = (event) => {
-            console.log("disconnected");
-          };
-
-          this.$router.push(role == "laywer" ? "/myprofile" : "/");
+          this.$router.push("/chat");
           this.$swal.fire({
             toast: true,
             icon: "success",

@@ -4,13 +4,11 @@ namespace MyApp;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
-require_once '../app/models/Client.php';
 
 
 
 class Chat implements MessageComponentInterface {
     protected $clients;
-    // private $users;
 
     public function __construct() {
         $this->clients = new \SplObjectStorage;
@@ -27,9 +25,7 @@ class Chat implements MessageComponentInterface {
         
         parse_str($querystring, $queryarray);
 
-
-
-        echo "New connection! ({$conn->resourceId})\n";
+        echo "New connection! ({$conn->resourceId}),\n ({$queryarray})\n";
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {

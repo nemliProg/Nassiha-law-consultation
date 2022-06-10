@@ -1,7 +1,7 @@
 <template>
-  <Sidebar :me="me" :consultations="consultations" :setOther="setOther"/>
-  <MainChat v-if="other" :key="key" :me="me" :cons="other"/>
-  <Choose v-else/>
+  <Sidebar :me="me" :consultations="consultations" :setOther="setOther" />
+  <MainChat v-if="other" :key="key" :me="me" :cons="other" :trigger="trigger" :conn="conn" />
+  <Choose v-else />
 </template>
 
 <script>
@@ -15,14 +15,16 @@ export default {
   components: {
     Sidebar,
     MainChat,
-    Choose
+    Choose,
   },
   data() {
     return {
       me: {},
+      conn : {},
       other: null,
       consultations: [],
-      key : null,
+      key: null,
+      trigger: 10,
     };
   },
   methods: {
@@ -98,13 +100,31 @@ export default {
       this.key = Math.random();
       this.other = cons;
     },
-    
+    triggerset() {
+      this.trigger = Math.random()*100;
+    },
+
+
   },
   mounted() {
-    if (window.localStorage.getItem('role') == 'lawyer') {
+    let id = localStorage.getItem("id");
+    this.conn = new WebSocket(`ws://localhost:8080?id=${id}/`);
+
+    this.conn.onopen = (event) => {
+      console.log("connected");
+    };
+    this.conn.onmessage = (event) => {
+      console.log("message sent");
+      this.triggerset();
+    };
+    this.conn.onclose = (event) => {
+      console.log("disconnected");
+    };
+
+    if (window.localStorage.getItem("role") == "lawyer") {
       this.getLawyer();
       this.getLawyerConsultations();
-    }else{
+    } else {
       this.getClient();
       this.getClientConsultations();
     }
