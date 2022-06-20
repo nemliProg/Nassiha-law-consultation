@@ -67,11 +67,17 @@ export default {
   }
   form{
     margin-top: 20px;
+    
     textarea {
       max-width: 60%;
       min-width: 60%;
       min-height: 100px;
       max-height: 250px;
+      @include tablet {
+        max-width: 100%;
+        min-width: 100%;
+        width: 100%;
+      }
       margin: auto;
       padding: 10px;
       display: block;

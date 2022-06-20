@@ -1,6 +1,6 @@
 <?php
 
-class DiplomasConroller extends Controller
+class DiplomasController extends Controller
 {
 
   public function __construct()
@@ -69,7 +69,7 @@ class DiplomasConroller extends Controller
   {
     $data = [
       'id' => $_POST['id'],
-      'id_err' => $_POST['id']
+      'id_err' => ''
     ];
 
     if (empty($data['id'])) {
@@ -79,7 +79,7 @@ class DiplomasConroller extends Controller
     if (empty($data['id_err'])) {
       if ($this->diplomaModel->deletediploma($data['id'])) {
         $arr = array(
-          'message' => 'message deleted'
+          'message' => 'diploma deleted'
         );
         echo json_encode($arr);
       } else {

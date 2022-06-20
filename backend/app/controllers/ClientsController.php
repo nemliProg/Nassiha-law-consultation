@@ -53,7 +53,7 @@ class ClientsController extends Controller
           $ifLawyer = $this->lawyerModel->ifLawyer($row->id);
           $iss = "localhost";
           $iat = strtotime("now");
-          $nbf = $iat + 10;
+          $nbf = $iat;
           $exp = strtotime("+1 week");
           $aud = ($ifLawyer) ? "MyLawyers" : "Myclients";
           $client_data = array(

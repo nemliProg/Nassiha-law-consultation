@@ -12,12 +12,13 @@ $secondary-color: #1282a6;
 $tertiary-color: #05546d;
 
 // Mixins
-@mixin d-flex($d: row, $jc: center, $ai: center) {
+@mixin d-flex($d: row, $jc: center, $ai: center, $imp: false) {
   display: flex;
-  flex-direction: $d;
-  justify-content: $jc;
-  align-items: $ai;
+  flex-direction: $d ;
+  justify-content: $jc ;
+  align-items: $ai ;
 }
+
 
 $breakpoints: (
   "phone-360": 500px,

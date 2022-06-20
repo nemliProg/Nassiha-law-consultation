@@ -2,19 +2,20 @@
   <div class="mainChat" :style="{ 'margin-left': sidebarWidth }">
     <div class="interlocutor">
       <div class="avatar">
-        <img
-          :src="cons.photo"
-          alt=""
-        />
+        <img :src="cons.photo" alt="" />
       </div>
       <div class="name">
-        <h3>Maître {{cons.fname}} {{cons.lname}}</h3>
+        <h3>Maître {{ cons.fname }} {{ cons.lname }}</h3>
       </div>
     </div>
     <div class="messages">
-      <Message v-for="(message,i) in messages" :message="message" :key="i" />
+      <Message v-for="(message, i) in messages" :message="message" :key="i" />
     </div>
-    <form class="send-message" :style="{ 'margin-left': sidebarWidth }" @submit.prevent="sendMessage">
+    <form
+      class="send-message"
+      :style="{ 'margin-left': sidebarWidth }"
+      @submit.prevent="sendMessage"
+    >
       <input type="text" placeholder="Type a message..." v-model="message" />
       <button>
         <i class="fas fa-paper-plane"></i>
@@ -52,7 +53,7 @@ export default {
       type: Number,
       required: true,
     },
-  },  
+  },
   methods: {
     async getMessages() {
       console.log(this.cons.id);
@@ -71,39 +72,58 @@ export default {
         })
         .catch((err) => console.log(err));
 
-        const messagesDiv = document.getElementsByClassName("messages")[0];
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      const messagesDiv = document.getElementsByClassName("messages")[0];
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
     },
     async sendMessage() {
-
-
-      let config = {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      };
-      var data = new FormData();
-      data.append("content", this.message);
-      data.append("from", localStorage.getItem("id"));
-      data.append("to", this.cons.to);
-      data.append("idConsultation", this.cons.id);
-      await axios
-        .post(
-          `http://localhost/nassiha-law-consultation/messagesController/addmessage`,
-          data,
-          config
-        )
-        .then((response) => {
-          console.log(response.data);
-          this.conn.send(response.data);
-          this.getMessages();
-          this.message = "";
-        })
-        .catch((err) => console.log(err));
+      if (this.message === "") {
+        await this.$swal.fire({
+          toast: true,
+          icon: "info",
+          title: "type your message ...",
+          position: "center",
+          iconColor: "#094b72",
+          color: "#094b72",
+          customClass: {
+            popup: "colored-toast",
+          },
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+        });
+      } else {
+        let config = {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        };
+        var data = new FormData();
+        data.append("content", this.message);
+        data.append("from", localStorage.getItem("id"));
+        data.append("to", this.cons.to);
+        data.append("idConsultation", this.cons.id);
+        await axios
+          .post(
+            `http://localhost/nassiha-law-consultation/messagesController/addmessage`,
+            data,
+            config
+          )
+          .then((response) => {
+            console.log(response.data);
+            let message = {
+              to: this.cons.to,
+              idC: this.cons.id,
+            };
+            this.conn.send(JSON.stringify(message));
+            this.getMessages();
+            this.message = "";
+          })
+          .catch((err) => console.log(err));
+      }
     },
   },
   mounted() {
-    console.log("mounted")
+    console.log("mounted");
     this.getMessages();
   },
   setup() {
@@ -113,7 +133,7 @@ export default {
   },
   watch: {
     trigger(newVal, oldVal) {
-        this.getMessages();
+      this.getMessages();
     },
   },
 };

@@ -6,57 +6,93 @@
           ><img src="../assets/logos/LOGO_Component.png" alt="logo nassiha"
         /></router-link>
       </div>
-      <img @click="toggleNav" id="bm" src="../assets/icons/burgerMenu.svg" alt="burger menu" />
+      <img
+        @click="toggleNav"
+        id="bm"
+        src="../assets/icons/burgerMenu.svg"
+        alt="burger menu"
+      />
     </div>
     <ul id="links">
-      <li><router-link to="/">HOME</router-link></li>
-      <li v-if="isLoggedIn && (role === 'client')"><router-link  to="/search">Research Lawyer</router-link></li>
-      <li v-if="!isLoggedIn"><router-link to="/authenticate">Login / Register</router-link></li>
-      <li v-if="isLoggedIn"><router-link to="/chat">Conversations</router-link></li>
-      <li v-if="isLoggedIn && (role === 'lawyer')"><router-link to="/myprofile">My Profile</router-link></li>
-      <li v-if="isLoggedIn"><router-link @click="logout" to="/">Logout</router-link></li>
+      <li @click="toggleNav" v-if="!isLoggedIn || role !== 'lawyer'"><router-link to="/">HOME</router-link></li>
+      <li @click="toggleNav" v-if="!isLoggedIn"><router-link to="/about">About</router-link></li>
+      <li @click="toggleNav" v-if="isLoggedIn && role === 'client'">
+        <router-link to="/search">Research Lawyer</router-link>
+      </li>
+      <li @click="toggleNav" v-if="!isLoggedIn">
+        <router-link to="/authenticate">Login / Register</router-link>
+      </li>
+      <li @click="toggleNav" v-if="isLoggedIn">
+        <router-link to="/chat">Conversations</router-link>
+      </li>
+      <li @click="toggleNav" v-if="isLoggedIn && role === 'lawyer'">
+        <router-link to="/myprofile">My Profile</router-link>
+      </li>
+      <li @click="toggleNav" v-if="isLoggedIn">
+        <router-link @click="logout" to="/">Logout</router-link>
+      </li>
     </ul>
   </nav>
+  <div class="layer" @click="toggleNav" ref="layer"></div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 
 export default {
   name: "Nav",
-  methods : {
+  methods: {
     logout() {
       localStorage.clear();
       this.$store.dispatch("setIsLoggedIn", false);
       this.$store.dispatch("setRole", "guest");
     },
-    toggleNav(){
-      const nav = document.getElementById('links')
-      const navLinks = document.querySelectorAll('nav ul li')
-      nav.classList.toggle('opened-nav')
-      
-      navLinks.forEach((link,index) => {
+    toggleNav() {
+      const nav = document.getElementById("links");
+      const navLinks = document.querySelectorAll("nav ul li");
+      nav.classList.toggle("opened-nav");
+      this.$refs.layer.classList.toggle("active");
+      navLinks.forEach((link, index) => {
         if (link.style.animation) {
           link.style.animation = ``;
         } else {
-          link.style.animation = `navLinksFade 0.5s ease forwards ${index / 6 + 0.5}s`;
+          link.style.animation = `navLinksFade 0.5s ease forwards ${
+            index / 6 + 0.5
+          }s`;
         }
       });
-    }
+    },
   },
   computed: {
     ...mapState({
-      isLoggedIn: state => state.isLoggedIn,
-      role: state => state.role
+      isLoggedIn: (state) => state.isLoggedIn,
+      role: (state) => state.role,
     }),
   },
 };
 </script>
 
-<style lang="scss">
-
+<style lang="scss" >
+.layer {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 2;
+  &.active {
+    display: none;
+  }
+  @include tablet {
+    &.active {
+      display: block;
+    }
+  }
+}
 nav {
-  @include d-flex(row,space-between);
+  @include d-flex(row, space-between);
   padding: 15px 10%;
   font-size: 0.8rem;
   font-weight: 400;
@@ -65,7 +101,7 @@ nav {
   position: relative;
   z-index: 999;
   .mobile-work {
-    @include d-flex(row,space-between);
+    @include d-flex(row, space-between);
   }
   .logo-holder {
     min-width: 150px;
@@ -123,7 +159,7 @@ nav {
     ul {
       position: absolute;
       transform: translateY(-130%);
-      transition: transform .5s ease-in-out;
+      transition: transform 0.5s ease-in-out;
       display: none;
       @include d-flex(column);
       padding: 20px 0px;
@@ -138,11 +174,11 @@ nav {
         }
       }
       li:last-child {
-      padding: 5px 10px;
-      a {
-        color: white;
+        padding: 5px 10px;
+        a {
+          color: white;
+        }
       }
-    }
     }
   }
   #bm {
@@ -151,8 +187,6 @@ nav {
   .opened-nav {
     @include d-flex(column);
     transform: translateY(0%);
-
-    
   }
 }
 @keyframes navLinksFade {

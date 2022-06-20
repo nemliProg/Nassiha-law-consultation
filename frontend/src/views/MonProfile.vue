@@ -44,7 +44,7 @@
   </div>
   <Profile v-if="section === 0" :lawyer="lawyer" v=1 />
   <Experience v-else-if="section === 1" :lawyer="lawyer" v=1 />
-  <Comment v-else-if="section === 2" :comments="comments" v=1 />
+  <Comment v-else-if="section === 2"  v=1 />
 </template>
 <script>
 import Experience from "../components/LawyerProfileComponents/Experience.vue";
@@ -74,14 +74,10 @@ export default {
       });
     });
     this.$store.dispatch("getLawyer");
-    this.$store.dispatch("getLawyerComments",localStorage.getItem('id'))
   },
   computed: {
     lawyer(){
       return this.$store.state.lawyer
-    },
-    comments(){
-      return this.$store.state.lawyerComments
     }
   }
 };
@@ -90,10 +86,27 @@ export default {
 <style lang="scss">
 .container {
   margin: 20px 15%;
+  @include phone {
+    margin: 20px 5%;
+  }
 }
 .header {
   .profile-header {
     @include d-flex(row, flex-start);
+    @include tablet {
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+      .profile-info {
+        text-align: center;
+        p {
+          font-size: 0.6rem;
+          .icon {
+            margin-right: 0px;
+          }
+        }
+      }
+    }
     gap: 20px;
     .img-holder {
       width: 150px;
@@ -118,11 +131,26 @@ export default {
     border-radius: 35px;
     width: 70%;
     margin: 20px auto;
+    @include tablet {
+      width: 90% !important;
+      
+    }
     ul {
       list-style: none;
       display: grid;
       padding: 10px;
       grid-template: 1fr / repeat(3, 1fr);
+      @include tablet {
+        grid-template: repeat(2, 1fr) / repeat(2, 1fr);
+        li:last-child {
+          grid-column: 1 / span 2;
+        }
+        li{
+          p{
+            text-align: center;
+          }
+        }
+      }
       li {
         cursor: pointer;
         @include d-flex(column);

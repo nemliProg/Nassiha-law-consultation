@@ -108,14 +108,18 @@ export default {
   },
   mounted() {
     let id = localStorage.getItem("id");
-    this.conn = new WebSocket(`ws://localhost:8080?id=${id}/`);
+    this.conn = new WebSocket(`ws://localhost:8080/`);
 
     this.conn.onopen = (event) => {
       console.log("connected");
     };
-    this.conn.onmessage = (event) => {
-      console.log("message sent");
-      this.triggerset();
+    this.conn.onmessage = (e) => {
+      // console.log("message sent");
+      let obj = JSON.parse(e.data);
+      console.log(obj.to);
+      if (obj.to == id) {
+        this.triggerset();
+      }
     };
     this.conn.onclose = (event) => {
       console.log("disconnected");

@@ -1,18 +1,21 @@
 <?php
 namespace MyApp;
 
+// use Controller;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
+// require_once './app/libraries/Controller.php';
+// require_once './app/libraries/Database.php';
+// require_once './app/config/config.php';
+// extends Controller
 
-
-
-class Chat implements MessageComponentInterface {
+class Chat  implements MessageComponentInterface {
     protected $clients;
+
 
     public function __construct() {
         $this->clients = new \SplObjectStorage;
-        // $this->users = new Client();
         echo "server is runing...";
     }
 
@@ -21,11 +24,8 @@ class Chat implements MessageComponentInterface {
         // Store the new connection to send messages to later
         $this->clients->attach($conn);
 
-        $querystring = $conn->httpRequest->getUri()->getQuery();
-        
-        parse_str($querystring, $queryarray);
 
-        echo "New connection! ({$conn->resourceId}),\n ({$queryarray})\n";
+        echo "New connection! ({$conn->resourceId}),\n";
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {

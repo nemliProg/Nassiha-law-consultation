@@ -57,13 +57,20 @@ export default {
 
 <style lang="scss" scoped>
 .second-section {
+  
   background-color: $bg-color;
   display: grid;
   grid-template: 1fr / repeat(2, 1fr);
   padding: 5% 2%;
+  @include tablet {
+  }
   h2 {
     font-family: $source;
     font-size: 2.5rem;
+    padding: 0px 0px 0px 57px;
+    @include tablet {
+      padding-left: 27px;
+    }
   }
   & > div {
     height: max-content;
@@ -74,6 +81,10 @@ export default {
     margin-top: 35px;
     color: #4f4f4f;
     font-weight: 300;
+    padding: 0px 0px 0px 57px;
+    @include tablet {
+      padding-left: 27px;
+    }
   }
   @include large-tablet {
     & > div > p {

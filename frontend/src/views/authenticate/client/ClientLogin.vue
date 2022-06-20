@@ -82,8 +82,12 @@ export default {
           localStorage.setItem("id", id);
           this.$store.dispatch("setIsLoggedIn", true);
           this.$store.dispatch("setRole", role);
+          if (role == "client") {
+            this.$router.push("/");
+          } else if (role == "lawyer") {
+            this.$router.push("/myprofile");
+          }
 
-          this.$router.push("/chat");
           this.$swal.fire({
             toast: true,
             icon: "success",

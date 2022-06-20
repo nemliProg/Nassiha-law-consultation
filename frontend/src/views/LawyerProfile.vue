@@ -2,19 +2,17 @@
   <div class="container header">
     <div class="profile-header">
       <div class="img-holder">
-        <img
-          :src="lawyer?.photo ?? lawyerAxios.photo"
-          alt="profile photo"
-        />
+        <img :src="lawyer?.photo ?? lawyerAxios.photo" alt="profile photo" />
       </div>
       <div class="profile-info">
-        <h3>Maître {{ lawyer?.lname ?? lawyerAxios.lname }} {{ lawyer?.fname ?? lawyerAxios.fname }}</h3>
+        <h3>
+          Maître {{ lawyer?.lname ?? lawyerAxios.lname }}
+          {{ lawyer?.fname ?? lawyerAxios.fname }}
+        </h3>
         <p>Lawyer at the bar of {{ lawyer?.bar ?? lawyerAxios.bar }}</p>
         <p>
           <span class="icon"
-            ><img
-              src="../assets/icons/adressIcon.svg"
-              alt="localisation icon"
+            ><img src="../assets/icons/adressIcon.svg" alt="localisation icon"
           /></span>
           {{ lawyer?.adress ?? lawyerAxios.adress }}
         </p>
@@ -48,10 +46,14 @@
       </ul>
     </div>
   </div>
-  <Profile v-if="section === 0" :lawyer="lawyer ?? lawyerAxios" v=0 />
-  <Experience v-else-if="section === 1" :lawyer="lawyer ?? lawyerAxios" v=0 />
-  <Comment v-else-if="section === 2" :comments="comments" v=0 />
-  <Consultation v-else-if="section === 3" :lawyer="lawyer ?? lawyerAxios" v=0 />
+  <Profile v-if="section === 0" :lawyer="lawyer ?? lawyerAxios" v="0" />
+  <Experience v-else-if="section === 1" :lawyer="lawyer ?? lawyerAxios" v="0" />
+  <Comment v-else-if="section === 2" v="0" />
+  <Consultation
+    v-else-if="section === 3"
+    :lawyer="lawyer ?? lawyerAxios"
+    v="0"
+  />
 </template>
 <script>
 import Experience from "../components/LawyerProfileComponents/Experience.vue";
@@ -81,7 +83,7 @@ export default {
       console.log(id);
       let config = {
         headers: {
-          Authorization: "Bearer " + localStorage.getItem("token")
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
       };
       axios
@@ -106,16 +108,13 @@ export default {
     if (this.lawyer === undefined) {
       this.getLawyer();
     }
-    this.$store.dispatch("getLawyerComments",this.$route.params.id)
-
   },
   computed: {
     lawyer() {
-      return this.$store.state.lawyers.find(lawyer => lawyer.id == this.$route.params.id);
+      return this.$store.state.lawyers.find(
+        (lawyer) => lawyer.id == this.$route.params.id
+      );
     },
-    comments(){
-      return this.$store.state.lawyerComments
-    }
   },
 };
 </script>
@@ -123,10 +122,27 @@ export default {
 <style lang="scss">
 .container {
   margin: 20px 15%;
+  @include phone {
+    margin: 20px 5%;
+  }
 }
 .header {
   .profile-header {
     @include d-flex(row, flex-start);
+    @include tablet {
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+      .profile-info {
+        text-align: center;
+        p {
+          font-size: 0.6rem;
+          .icon {
+            margin-right: 0px;
+          }
+        }
+      }
+    }
     gap: 20px;
     .img-holder {
       width: 150px;
@@ -138,7 +154,6 @@ export default {
       }
     }
     .profile-info {
-
       p {
         font-size: 0.8rem;
         .icon {
@@ -152,11 +167,23 @@ export default {
     border-radius: 35px;
     width: 80%;
     margin: 20px auto;
+     @include tablet {
+      width: 90% !important;
+      
+    }
     ul {
       list-style: none;
       display: grid;
       padding: 10px;
       grid-template: 1fr / repeat(3, 1fr) 2fr;
+      @include tablet {
+        grid-template: repeat(2, 1fr) / repeat(2, 1fr);
+        li{
+          p{
+            text-align: center;
+          }
+        }
+      }
       li {
         cursor: pointer;
         @include d-flex(column);

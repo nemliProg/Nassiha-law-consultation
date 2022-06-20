@@ -1,6 +1,6 @@
 <?php
 
-class Diplomas extends Database {
+class Diploma extends Database {
   private $db;
 
   public function __construct()

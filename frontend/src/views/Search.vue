@@ -1,9 +1,23 @@
 <template>
   <div class="search-section">
-    <div class="inputs">
-      <input class="input" placeholder="Lawyer's name" type="text" v-model="lawyerName" />
+    <div class="inputs" ref="search">
+      <input
+        class="input"
+        @keyup="filter"
+        placeholder="Lawyer's name"
+        type="text"
+        v-model="lawyerName"
+      />
       <div class="serch-select">
-        <input class="input" list="skills" placeholder="All Skills" name="skill" v-model="skill" />
+        <input
+          class="input"
+          @change="filter"
+          @keyup="filter"
+          list="skills"
+          placeholder="All Skills"
+          name="skill"
+          v-model="skill"
+        />
         <datalist id="skills">
           <option v-for="(skill, i) in skills" :value="skill" :key="i">
             {{ skill }}
@@ -11,7 +25,15 @@
         </datalist>
       </div>
       <div class="serch-select">
-        <input class="input" list="cities" placeholder="All Cities" name="city" v-model="city" />
+        <input
+          class="input"
+          @change="filter"
+          @keyup="filter"
+          list="cities"
+          placeholder="All Cities"
+          name="city"
+          v-model="city"
+        />
         <datalist id="cities">
           <option v-for="(city, i) in cities" :value="city" :key="i">
             {{ city }}
@@ -19,37 +41,69 @@
         </datalist>
       </div>
     </div>
-    <button class="search-icon">
+    <button @click="toggleSearch" class="search-icon">
       <img src="../assets/icons/SearchIcon.svg" alt="search icon" />
     </button>
   </div>
   <div class="lawyers">
-    <Lawyer v-for="(lawyer,i) in lawyers" :key="i" :lawyer="lawyer" @click="navigate(lawyer.id)" />
+    <Lawyer
+      v-for="(lawyer, i) in lawyersFilter"
+      :key="i"
+      :lawyer="lawyer"
+      @click="navigate(lawyer.id)"
+    />
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import Lawyer from '../components/searchComponents/item.vue'
+import Lawyer from "../components/searchComponents/item.vue";
+
 export default {
   name: "Search",
   components: {
-    Lawyer
+    Lawyer,
   },
   data() {
     return {
       lawyerName: "",
       city: "",
-      skill: ""
-    }
+      skill: "",
+      lawyersFilter: [],
+    };
   },
   methods: {
     navigate(id) {
-      this.$router.push({path : `/profile/${id}`})
-    }
+      this.$router.push({ path: `/profile/${id}` });
+    },
+    toggleSearch() {
+      this.$refs.search.classList.toggle("active");
+    },
+    filter() {
+      this.lawyersFilter = this.lawyers.filter((lawyer) => {
+        let name =
+          lawyer.fname.toLowerCase() + " " + lawyer.lname.toLowerCase();
+        return name.toLowerCase().includes(this.lawyerName.toLowerCase());
+      });
+      if (this.skill != "") {
+        this.lawyersFilter = this.lawyersFilter.filter((lawyer) => {
+          let ifTrue = false;
+          lawyer.skills?.forEach((skill) => {
+            if (skill.skill.toLowerCase().includes(this.skill.toLowerCase())) {
+              ifTrue = true;
+            }
+          });
+          return ifTrue ? lawyer : null;
+        });
+      }
+      if (this.city != "") {
+        this.lawyersFilter = this.lawyersFilter.filter((lawyer) => {
+          return lawyer.bar.toLowerCase().includes(this.city.toLowerCase());
+        });
+      }
+    },
   },
   computed: {
-    lawyers() {    
+    lawyers() {
       return this.$store.state.lawyers;
     },
     cities() {
@@ -61,22 +115,24 @@ export default {
   },
   mounted() {
     this.$store.dispatch("getLawyers");
-  }
+    this.lawyersFilter = this.lawyers;
+  },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .search-section {
   width: max-content;
   margin: 20px auto;
   border-radius: 15px;
   padding: 15px;
   @include d-flex;
-  gap: 10px;
   background-color: $secondary-color;
   .inputs {
+    transition: height 0.5s ease-in-out;
     @include d-flex;
     gap: 10px;
+    margin-right: 10px;
     .input {
       padding: 5px 8px;
       border-radius: 15px;
@@ -84,16 +140,30 @@ export default {
       outline: none;
     }
   }
+  @include tablet {
+    .inputs {
+      flex-direction: column;
+      width: 0px;
+      height: 0px;
+      overflow: hidden;
+    }
+    .inputs.active {
+      width: 184px;
+      height: 110px;
+      margin-right: 10px;
+    }
+  }
   .serch-select {
     display: inline-block;
   }
   .search-icon {
+    cursor: pointer;
     width: 40px;
     height: 40px;
     padding: 5px;
     border: none;
     border-radius: 50%;
-    img{
+    img {
       width: 100%;
     }
   }
@@ -101,16 +171,17 @@ export default {
 .lawyers {
   width: 80%;
   margin: 10px auto 20px;
-  @include d-flex(column);
+  @include d-flex(column, flex-start);
+  min-height: 500px;
   gap: 15px;
   .lawyer {
     cursor: pointer;
-    @include d-flex(row,space-between);
+    @include d-flex(row, space-between);
     background-color: $tertiary-color;
     width: 100%;
     border-radius: 20px;
     padding: 20px 60px 20px 20px;
-    *{
+    * {
       color: white;
       font-family: $source;
     }
@@ -132,18 +203,18 @@ export default {
       .langs {
         @include d-flex;
         gap: 5px;
-        img{
+        img {
           width: 20px;
         }
       }
     }
-    &>div:nth-child(2n) {
+    & > div:nth-child(2n) {
       flex: 1;
       padding: 0px 20px 0px 50px;
       align-items: flex-start;
       justify-content: flex-start;
       height: 100%;
-      *{
+      * {
         line-height: 24px;
       }
       .lawyer-adress {
@@ -151,7 +222,7 @@ export default {
         span {
           margin-bottom: -5px;
         }
-        @include d-flex(row,flex-start);
+        @include d-flex(row, flex-start);
         gap: 6px;
       }
       .skills {
@@ -164,7 +235,7 @@ export default {
       }
       .see-more {
         margin-top: 5px;
-        @include d-flex(row,flex-start);
+        @include d-flex(row, flex-start);
         gap: 5px;
         font-size: 12px;
         background-color: white;
@@ -172,7 +243,7 @@ export default {
         color: $tertiary-color;
         padding: 0px 12px;
         border-radius: 20px;
-        span{
+        span {
           width: 20px;
           @include d-flex;
           img {

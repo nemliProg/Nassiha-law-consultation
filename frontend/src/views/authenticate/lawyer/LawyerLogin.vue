@@ -77,7 +77,11 @@ export default {
           this.$store.dispatch("setIsLoggedIn", true);
           this.$store.dispatch("setRole", role);
           
-          this.$router.push("/chat");
+          if (role == "client") {
+            this.$router.push("/");
+          } else if (role == "lawyer") {
+            this.$router.push("/myprofile");
+          }
           this.$swal.fire({
             toast: true,
             icon: "success",

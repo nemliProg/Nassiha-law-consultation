@@ -14,12 +14,12 @@ class CommentsController extends Controller
         header('Acces-Control-Allow-Headers: Acces-Control-Allow-Methods,Content-Type,Acces-Control-Allow-Headers,Authorization,X-Requested-With');
 
         $data = [
-            'comment' => $_POST['comment'],
+            'content' => $_POST['content'],
             'idLawyer' => $_POST['idLawyer'],
             'idClient' => $_POST['idClient'],
         ];
 
-        if (!empty($data['comment']) && !empty($data['idLawyer']) && !empty($data['idClient'])) {
+        if (!empty($data['content']) && !empty($data['idLawyer']) && !empty($data['idClient'])) {
             if ($this->commentModel->add($data)) {
                 $arr = array(
                     'message' => 'Comment created'

@@ -2,7 +2,7 @@
 <div class="last-section">
   <h3>For the first time,consult a lawyer in realtime chat<br />
   And get the answer as soon as possible.</h3>
-  <router-link to="/about"><router-link to="/search"><button>Consult a Lawyer now</button></router-link></router-link>
+  <router-link to="" @click="toSearch"><button>Consult a Lawyer now</button></router-link>
 </div>
   
 </template>
@@ -10,6 +10,17 @@
 <script>
 export default {
   name : "Last",
+  methods:{
+    toSearch(){
+      if (window.localStorage.getItem('role') == 'client') {
+        this.$router.push('/search');
+      } else if (window.localStorage.getItem('role') == 'lawyer') {
+        this.$router.push('/chat');
+      }else {
+        this.$router.push('/authenticate/client/login');
+      }
+    }
+  }
 }
 </script>
 
